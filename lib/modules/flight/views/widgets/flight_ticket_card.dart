@@ -20,114 +20,121 @@ class FlightTicketCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(
-          width: width,
-          height: height,
-          padding: EdgeInsets.all(10.w),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.08),
-                blurRadius: 25,
-                spreadRadius: 2,
-                offset: const Offset(0, 10),
-              ),
-            ],
-            borderRadius: BorderRadius.circular(30.r),
-          ),
-          child: Column(
-            children: [
-              headerWidget,
-              SizedBox(height:12.h),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                      child: _airportInfo(
-                        time: flight.departureTime,
-                        code: flight.departureAirport,
-                        city:flight.departureCity,
-                        isRight: false,
-                      ),
-                  ),
-
-
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: 40.w,
-                        height: 35.w,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            CustomPaint(
-                              size: Size(40.w, 40.w),
-                              painter: HalfDottedCirclePainter(),
-                            ),
-                            Image.asset(
-                              'assets/images/airplane.png',height: 20.h,color: const Color(0xff2F6BFF),
-                            )
-                          ],
+        ClipRRect(
+          borderRadius: BorderRadius.circular(30.r),
+          child: Container(
+            width: width,
+            height: height,
+            padding: EdgeInsets.all(10.w),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.03),
+                  blurRadius: 25,
+                  spreadRadius: 2,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+                border: Border.all(
+                  color: Colors.transparent,
+                  width: 0,
+                ),
+              borderRadius: BorderRadius.circular(30.r),
+            ),
+            child: Column(
+              children: [
+                headerWidget,
+                SizedBox(height:12.h),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                        child: _airportInfo(
+                          time: flight.departureTime,
+                          code: flight.departureAirport,
+                          city:flight.departureCity,
+                          isRight: false,
                         ),
-                      ),
-
-
-                      Text(
-                        '7h 15m',
-                        style: TextStyle(
-                          fontSize: 11.sp,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black87,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Expanded(
-
-                    child: Align(
-                       alignment: Alignment.centerRight,
-                       child: _airportInfo(
-                         time: flight.arrivalTime,
-                         code: flight.arrivalAirport,
-                         city:flight.arrivalCity,
-                         isRight: true,
-                       ),
                     ),
-                  ),
 
-                ],
-              ),
-              SizedBox(height: 15.h),
-              /// DOTTED LINE
-              LayoutBuilder(
-                builder: (_, constraints) {
-                  return Row(
-                    children: List.generate(
-                      (constraints.maxWidth /
-                          8)
-                          .floor(),
-                          (index) => Expanded(
-                        child: Container(
-                          margin:
-                          const EdgeInsets
-                              .symmetric(
-                            horizontal: 2,
+
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: 40.w,
+                          height: 35.w,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              CustomPaint(
+                                size: Size(40.w, 40.w),
+                                painter: HalfDottedCirclePainter(),
+                              ),
+                              Image.asset(
+                                'assets/images/airplane.png',height: 20.h,color: const Color(0xff2F6BFF),
+                              )
+                            ],
                           ),
-                          height: 1,
-                          color: Colors.grey
-                              .shade300,
                         ),
+
+
+                        Text(
+                          '7h 15m',
+                          style: TextStyle(
+                            fontSize: 11.sp,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Expanded(
+
+                      child: Align(
+                         alignment: Alignment.centerRight,
+                         child: _airportInfo(
+                           time: flight.arrivalTime,
+                           code: flight.arrivalAirport,
+                           city:flight.arrivalCity,
+                           isRight: true,
+                         ),
                       ),
                     ),
-                  );
-                },
-              ),
-              SizedBox(height: 15.h),
-              bottomWidget
-            ],
+
+                  ],
+                ),
+                SizedBox(height: 15.h),
+                /// DOTTED LINE
+                LayoutBuilder(
+                  builder: (_, constraints) {
+                    return Row(
+                      children: List.generate(
+                        (constraints.maxWidth /
+                            8)
+                            .floor(),
+                            (index) => Expanded(
+                          child: Container(
+                            margin:
+                            const EdgeInsets
+                                .symmetric(
+                              horizontal: 2,
+                            ),
+                            height: 1,
+                            color: Colors.grey
+                                .shade300,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                SizedBox(height: 15.h),
+                bottomWidget
+              ],
+            ),
           ),
         ),
         Positioned(
@@ -135,7 +142,7 @@ class FlightTicketCard extends StatelessWidget {
           top: cutPosition,
           child: CircleAvatar(
             radius: 14.r,
-            backgroundColor: const Color(0xffF5F5F7),
+            backgroundColor: Color(0xffF2F3F7),
           ),
         ),
         Positioned(
@@ -143,7 +150,7 @@ class FlightTicketCard extends StatelessWidget {
           top: cutPosition,
           child: CircleAvatar(
             radius: 14.r,
-            backgroundColor: const Color(0xffF5F5F7),
+            backgroundColor: Color(0xffF2F3F7),
           ),
         ),
       ],

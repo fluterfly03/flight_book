@@ -39,6 +39,7 @@ class PlanTripScreen extends GetView<FlightController> {
       ),
       body: SafeArea(
         child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 18.w),
           decoration:  BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
@@ -52,140 +53,136 @@ class PlanTripScreen extends GetView<FlightController> {
               ],
             ),
           ),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                // TOP SECTION
-                Padding(
-                  padding: EdgeInsets.fromLTRB(24.w, 24.h, 24.w, 25.h),
+          child: Column(
+            children: [
+              SizedBox(height: 28.h),
+              Row(
+                children: [
+                  Text(
+                    'Plan your trip',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 26.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const Spacer(),
+                  Container(
+                    height: 52.w,
+                    width: 52.w,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 2,
+                      ),
+                      image: const DecorationImage(
+                        image: NetworkImage(
+                          'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
+                        ),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+
+              SizedBox(height: 5.h),
+              // TOP SECTION
+              Expanded(
+                child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 28.h),
+
+                      SizedBox(height: 20.h),
+                      // SEARCH CARD
+                      SearchFlightCard(),
+                      SizedBox(height: 25.h),
+                      // SAVED TRIPS
                       Row(
-                        children: [
+                        children:  [
                           Text(
-                            'Plan your trip',
+                            'Saved trips',
                             style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 26.sp,
+                              fontSize: 18.sp,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          const Spacer(),
-                          Container(
-                            height: 52.w,
-                            width: 52.w,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Colors.white,
-                                width: 2,
-                              ),
-                              image: const DecorationImage(
-                                image: NetworkImage(
-                                  'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
-                                ),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-
-
-                      SizedBox(height: 28.h),
-                      SearchFlightCard(),
-                      // SEARCH CARD
-
-                    ],
-                  ),
-                ),
-
-                // SAVED TRIPS
-                Padding(
-                  padding:
-                  EdgeInsets.only(left: 24.w,right:24.w,bottom: 10.h),
-                  child: Row(
-                    children:  [
-                      Text(
-                        'Saved trips',
-                        style: TextStyle(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Spacer(),
-                      Text(
-                        'See more',
-                        style: TextStyle(
-                          color: Colors.black54,
-                          fontSize: 10.sp,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-
-
-                SizedBox(
-                  height: 180.h,
-                  child: ListView.separated(
-                    padding:
-                    EdgeInsets.symmetric(horizontal: 24.w),
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 3,
-                    separatorBuilder: (_, __) =>
-                    SizedBox(width: 18.w),
-                    itemBuilder: (_, __) {
-                      return  FlightTicketCard(
-                        flight:FlightModel(
-                          airlineName: "Citilink Airline",
-                          departureTime: "07:47",
-                          departureCity: "Jakarta",
-                          arrivalTime: "14:30",
-                          arrivalCity: "Tokyo",
-                          duration: "7h 15m",
-                          airlineLogo: '',
-                          flightNumber: '',
-                          departureAirport: '',
-                          arrivalAirport: '',
-                          priceAmount: 122.56,
-                          priceCurrency: '',
-                          aircraftType: '',
-                          stops: 1,
-                        ),
-                        height: 180.h,
-                        width: 300.w,
-                        cutPosition:100.h ,
-                        headerWidget: Text(
-                        'Citilink',
-                        style: TextStyle(
-                          color: Colors.green,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20.sp,
-                        ),
-                      ),bottomWidget: Row(
-                        children: const [
-                          Info(
-                            title:
-                            'DATE',
-                            value: 'Jan 20, 2025',
-                          ),
                           Spacer(),
-                          Info(
-                            title:
-                            'DATE',
-                            value: 'Jan 20, 2025',
-                          ),
+                          Text(
+                            'See more',
+                            style: TextStyle(
+                              color: Colors.black54,
+                              fontSize: 10.sp,
+                            ),
+                          )
                         ],
-                      ),);
-                    },
+                      ),
+                
+                      SizedBox(height: 10.h),
+                      SizedBox(
+                        height: 180.h,
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 3,
+                          separatorBuilder: (_, __) =>
+                              SizedBox(width: 8.w),
+                          itemBuilder: (_, __) {
+                            return  FlightTicketCard(
+                              flight:FlightModel(
+                                airlineName: "Citilink Airline",
+                                departureTime: "07:47",
+                                departureCity: "Jakarta",
+                                arrivalTime: "14:30",
+                                arrivalCity: "Tokyo",
+                                duration: "7h 15m",
+                                airlineLogo: '',
+                                flightNumber: '',
+                                departureAirport: '',
+                                arrivalAirport: '',
+                                priceAmount: 122.56,
+                                priceCurrency: '',
+                                aircraftType: '',
+                                stops: 1,
+                              ),
+                              height: 180.h,
+                              width: 300.w,
+                              cutPosition:100.h ,
+                              headerWidget: Text(
+                                'Citilink',
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20.sp,
+                                ),
+                              ),bottomWidget: Row(
+                              children: const [
+                                Info(
+                                  title:
+                                  'DATE',
+                                  value: 'Jan 20, 2025',
+                                ),
+                                Spacer(),
+                                Info(
+                                  title:
+                                  'DATE',
+                                  value: 'Jan 20, 2025',
+                                ),
+                              ],
+                            ),);
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 30.h),
+                
+                    ],
                   ),
                 ),
-                SizedBox(height: 30.h),
-              ],
-            ),
+              ),
+
+            ],
           ),
         ),
       ),

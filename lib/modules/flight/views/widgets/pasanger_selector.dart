@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/flight_controller.dart';
@@ -78,8 +79,16 @@ class _PasangerSelectorState extends State<PasangerSelector> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                      BorderRadius.circular(28.r),
+                    ),
+                  ),
                   onPressed: Get.back,
-                  child: const Text('Done'),
+                  child: const Text('Done',style: TextStyle(color: Colors.white),),
                 ),
               ),
             ],

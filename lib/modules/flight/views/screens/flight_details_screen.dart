@@ -38,7 +38,7 @@ class FlightDetailsScreen extends GetView<FlightController> {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Color(0xffcddcf9), Colors.white, Colors.white],
+                colors: [Color(0xffcddcf9),Color(0xffF2F3F7),Color(0xffF2F3F7),Color(0xffF2F3F7)],
               ),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),

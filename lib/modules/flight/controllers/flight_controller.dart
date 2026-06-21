@@ -53,6 +53,21 @@ class FlightController extends GetxController {
       initialDate: departureDate.value,
       firstDate: DateTime.now(),
       lastDate: DateTime(2035),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: Colors.black, // Header background & selected date
+              onPrimary: Colors.white, // Text on selected date
+              onSurface: Colors.black, // Default text color
+            ),
+            datePickerTheme: const DatePickerThemeData(
+              backgroundColor: Colors.white,
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
 
     if (picked != null) {

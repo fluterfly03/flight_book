@@ -42,7 +42,7 @@ final isPriceLowToHigh = true.obs; // This should come from your controller's st
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [Color(0xffcddcf9), Colors.white, Colors.white],
+              colors: [Color(0xffcddcf9),Color(0xffF2F3F7),Color(0xffF2F3F7),Color(0xffF2F3F7)],
             ),
           ),
           padding:     EdgeInsets.symmetric(horizontal: 15.w, vertical: 12.h),
@@ -104,7 +104,7 @@ final isPriceLowToHigh = true.obs; // This should come from your controller's st
                       final flight = list[index];
                       return FlightTicketCard(
                         flight: flight,
-                        height: 200.h,
+                        height: 210.h,
                         width: 350.w,
                         cutPosition: 120.h,
                         bottomWidget: Row(
@@ -159,15 +159,18 @@ final isPriceLowToHigh = true.obs; // This should come from your controller's st
                           children: [
                             if (flight.airlineLogo.isNotEmpty)
                               Container(
-                                width: 46.h,
-                                height: 46.h,
+
+                                width: 48.h,
+                                height: 48.h,
+                                padding: EdgeInsets.all(2.h),
                                 decoration: const BoxDecoration(
+                                  color: Color(0xffF2F3F7),
                                   shape: BoxShape.circle,
                                 ),
                                 child: ClipOval(
                                   child: Image.network(
                                     flight.airlineLogo,
-                                    fit: BoxFit.cover,
+                                    fit: BoxFit.contain,
                                     errorBuilder: (_, __, ___) => Container(color: const Color(0xffEAF8EE)),
                                   ),
                                 ),
