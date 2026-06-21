@@ -11,9 +11,7 @@ class FlightListingScreen extends GetView<FlightController> {
 
   @override
   Widget build(BuildContext context) {
-    // use flights from controller (populated by FlightApiService.searchFlights)
     // controller is available via GetView
-    final flights = controller.flights;
 
     return Scaffold(
       backgroundColor: const Color(0xffF5F5F7),
@@ -25,7 +23,7 @@ class FlightListingScreen extends GetView<FlightController> {
           color: const Color(0xffDCE8FF),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(.08),
+              color: const Color.fromRGBO(0, 0, 0, 0.08),
               blurRadius: 20,
               offset: const Offset(0, 8),
             )
@@ -78,7 +76,13 @@ class FlightListingScreen extends GetView<FlightController> {
                   const SizedBox(width: 12),
                   _chip("Preferred airlines"),
                   const SizedBox(width: 12),
-                  _chip("Flight type"),
+                  GestureDetector(
+                    onTap: () => controller.openAircraftTypeSelector(),
+                    child: Obx(() {
+                      final selected = controller.selectedAircraftType.value;
+                      return _chip(selected.isNotEmpty ? selected : "Flight type");
+                    }),
+                  ),
                 ],
               ),
             ),

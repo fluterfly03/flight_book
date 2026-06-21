@@ -3,11 +3,13 @@ import 'dart:convert';
 import '../models/airport_model.dart';
 import '../models/flight_model.dart';
 import '../models/flight_details_model.dart';
+import '../models/aircraft_type_model.dart';
 import 'api_client.dart';
 
 class FlightApiService {
   static const String _searchPath = '/flight_api.php/search';
   static const String _flightPath = '/flight_api.php/flight';
+  static const String _aircraftTypesPath = '/flight_api.php/aircraft-types';
   static const String _airportsFromPath = '/flight_api.php/airports/from';
   static const String _airportsToPath = '/flight_api.php/airports/to';
 
@@ -97,6 +99,43 @@ class FlightApiService {
       throw ApiException(e.toString());
     }
   }
+
+      /// Fetch aircraft types with pagination and optional search
+      static Future<AircraftTypesResponse> fetchAircraftTypes({
+        String search = '',
+        int limit = 10,
+        int page = 1,
+      }) async {
+        final body = {
+          'search': search,
+          'limit': limit,
+          'page': page,
+        };
+
+        final client = ApiClient.instance;
+        try {
+          final response = await client.post(_aircraftTypesPath, data: body);
+
+          if (response.statusCode == 200 || response.statusCode == 202) {
+            final Map<String, dynamic> data = response.data is String
+                ? jsonDecode(response.data)
+                : response.data as Map<String, dynamic>;
+            if (data['status'] == 'success' && data['data'] != null) {
+              return AircraftTypesResponse.fromJson(data);
+            } else if (response.statusCode == 202) {
+              throw ApiException('Request queued due to offline mode', statusCode: response.statusCode);
+            } else {
+              throw ApiException(data['message'] ?? 'Unknown API error', statusCode: response.statusCode);
+            }
+          } else {
+            throw ApiException('Network error: ${response.statusCode}', statusCode: response.statusCode);
+          }
+        } on ApiException {
+          rethrow;
+        } catch (e) {
+          throw ApiException(e.toString());
+        }
+      }
 
   /// Fetch airports for departure (from)
   static Future<List<Airport>> fetchAirportsFrom({

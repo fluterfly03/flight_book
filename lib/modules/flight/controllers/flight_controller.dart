@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import '../models/airport_model.dart';
 import '../models/flight_model.dart';
 import '../models/flight_details_model.dart';
+import '../models/aircraft_type_model.dart';
+import '../views/widgets/aircraft_type_selector.dart';
 import '../../../routes/app_pages.dart';
 import '../services/api_client.dart';
 import '../services/flight_api_service.dart';
@@ -99,6 +101,13 @@ class FlightController extends GetxController {
   final selectedFlight = Rxn<FlightModel>();
   final selectedFlightDetails = Rxn<FlightDetailsResponse>();
   final isLoading = false.obs;
+  // Aircraft types state for selector
+  final aircraftTypes = <AircraftType>[].obs;
+  final aircraftTypesPage = 1.obs;
+  final aircraftTypesHasNext = false.obs;
+  final isLoadingAircraftTypes = false.obs;
+  final isLoadingMoreAircraftTypes = false.obs;
+  final selectedAircraftType = ''.obs;
 
 
   void searchFlights() {
@@ -155,6 +164,9 @@ class FlightController extends GetxController {
         to: toCode,
         passengers: passengerCount.value,
         sortBy: 'price_asc',
+        filters: {
+          'aircraft_type': selectedAircraftType.value,
+        },
       );
       flights.value = results;
       // close loading before navigation
@@ -178,6 +190,42 @@ class FlightController extends GetxController {
   void selectFlight(FlightModel flight) {
     selectedFlight.value = flight;
     _fetchFlightDetails(flight.id ?? 0);
+  }
+
+  void openAircraftTypeSelector() {
+    Get.bottomSheet(
+      const AircraftTypeSelector(),
+      isScrollControlled: true,
+    );
+  }
+
+  /// Fetch aircraft types. When [append] is true, append results to existing list.
+  Future<void> fetchAircraftTypes({String search = '', int limit = 10, int page = 1, bool append = false}) async {
+    try {
+      if (append) {
+        isLoadingMoreAircraftTypes.value = true;
+      } else {
+        isLoadingAircraftTypes.value = true;
+      }
+
+      final resp = await FlightApiService.fetchAircraftTypes(search: search, limit: limit, page: page);
+
+      final list = resp.aircraftTypes;
+      if (append) {
+        aircraftTypes.addAll(list);
+      } else {
+        aircraftTypes.assignAll(list);
+      }
+
+      aircraftTypesPage.value = resp.pagination?.currentPage ?? page;
+      aircraftTypesHasNext.value = resp.pagination?.hasNextPage ?? false;
+    } catch (e) {
+      final message = e is ApiException ? e.message : 'Failed to load aircraft types';
+      Get.snackbar('Error', message, snackPosition: SnackPosition.BOTTOM);
+    } finally {
+      isLoadingAircraftTypes.value = false;
+      isLoadingMoreAircraftTypes.value = false;
+    }
   }
 
   Future<void> _fetchFlightDetails(int flightId) async {
