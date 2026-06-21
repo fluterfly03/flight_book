@@ -10,7 +10,8 @@ import '../views/widgets/pasanger_selector.dart';
 class FlightController extends GetxController {
   final from = 'Jakarta (CGK)'.obs;
   final to = 'Tokyo (NRT)'.obs;
-  final airports = <Airport>[].obs;
+  final fromAirports = <Airport>[].obs;
+  final toAirports = <Airport>[].obs;
   final from1 = Rxn<Airport>();
   final to1 = Rxn<Airport>();
   final passengerCount = 1.obs;
@@ -53,38 +54,27 @@ class FlightController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _loadAirports();
+  }
 
-    /// Replace this with your API response
-    final response = [
-      {
-        "airport_code": "NRT",
-        "city": "Tokyo",
-        "flight_count": 10
-      },
-      {
-        "airport_code": "CGK",
-        "city": "Jakarta",
-        "flight_count": 8
-      },
-      {
-        "airport_code": "SIN",
-        "city": "Singapore",
-        "flight_count": 12
-      },
-      {
-        "airport_code": "DEL",
-        "city": "Delhi",
-        "flight_count": 15
-      },
-    ];
+  Future<void> _loadAirports() async {
+    try {
+      // Fetch airports for both from and to
+      final fromAirports = await FlightApiService.fetchAirportsFrom(limit: 20);
+      final toAirports = await FlightApiService.fetchAirportsTo(limit: 20);
 
-    airports.assignAll(
-      response.map((e) => Airport.fromJson(e)).toList(),
-    );
+      // Use 'from' airports as the main list (you can adjust this logic as needed)
+      this.fromAirports.assignAll(fromAirports);
+      this.toAirports.assignAll(toAirports);
 
-    if (airports.length >= 2) {
-      from1.value = airports[1]; // Jakarta
-      to1.value = airports[0]; // Tokyo
+      // Set default from and to if available
+      if (fromAirports.isNotEmpty && toAirports.isNotEmpty) {
+        from1.value = fromAirports.first;
+        to1.value = toAirports.first;
+      }
+    } catch (e) {
+      // Log error but don't crash; airports list remains empty
+      print('Error loading airports: $e');
     }
   }
 

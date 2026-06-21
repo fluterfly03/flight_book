@@ -9,7 +9,6 @@ import '../../../../routes/app_pages.dart';
 import '../../controllers/flight_controller.dart';
 import '../../models/airport_model.dart';
 import 'custom_tile.dart';
-import 'dc.dart';
 
 class SearchFlightCard extends StatefulWidget {
   const SearchFlightCard({super.key});
@@ -57,7 +56,7 @@ class _SearchFlightCardState extends State<SearchFlightCard> {
                 () => _airportField(
               label: 'From',
               selected: controller.from1.value,
-              airports: controller.airports,
+              airports: controller.fromAirports,
               onSelected: controller.setFrom,
             ),
           ),
@@ -111,7 +110,7 @@ class _SearchFlightCardState extends State<SearchFlightCard> {
                 () => _airportField(
               label: 'To',
               selected: controller.to1.value,
-              airports: controller.airports,
+              airports: controller.toAirports,
               onSelected: controller.setTo,
             ),
           ),
