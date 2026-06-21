@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../../routes/app_pages.dart';
 import '../../controllers/flight_controller.dart';
+import '../../models/flight_model.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/flight_ticket_card.dart';
 import '../widgets/half_dotted_circle painter.dart';
@@ -138,18 +139,21 @@ class PlanTripScreen extends GetView<FlightController> {
                     SizedBox(width: 18.w),
                     itemBuilder: (_, __) {
                       return  FlightTicketCard(
-                        flight:Flight(
+                        flight:FlightModel(
                           airlineName: "Citilink Airline",
-                          logoColor: const Color(0xffEAF8EE),
-                          logoText: "Citilink",
                           departureTime: "07:47",
-                          departureCode: "CGK",
                           departureCity: "Jakarta",
                           arrivalTime: "14:30",
-                          arrivalCode: "NRT",
                           arrivalCity: "Tokyo",
                           duration: "7h 15m",
-                          price: 321,
+                          airlineLogo: '',
+                          flightNumber: '',
+                          departureAirport: '',
+                          arrivalAirport: '',
+                          priceAmount: 122.56,
+                          priceCurrency: '',
+                          aircraftType: '',
+                          stops: 1,
                         ),
                         height: 180.h,
                         width: 300.w,

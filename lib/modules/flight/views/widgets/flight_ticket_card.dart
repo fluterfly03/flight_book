@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../models/flight_model.dart';
 import '../screens/flight_listing_screen.dart';
 import 'half_dotted_circle painter.dart';
 import 'info_widget.dart';
@@ -12,7 +13,7 @@ class FlightTicketCard extends StatelessWidget {
   final double cutPosition;
   final double height;
   final double width;
-  final Flight flight;
+  final FlightModel flight;
   const FlightTicketCard({super.key,required this.bottomWidget,required this.headerWidget, required this.cutPosition,required this.height, required this.width,required this.flight});
 
   @override
@@ -43,12 +44,12 @@ class FlightTicketCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    child: _airportInfo(
-                      time: flight.departureTime,
-                      code: flight.departureCode,
-                      city:flight.departureCity,
-                      isRight: false,
-                    ),
+                      child: _airportInfo(
+                        time: flight.departureTime,
+                        code: flight.departureAirport,
+                        city:flight.departureCity,
+                        isRight: false,
+                      ),
                   ),
 
 
@@ -87,13 +88,13 @@ class FlightTicketCard extends StatelessWidget {
                   Expanded(
 
                     child: Align(
-                      alignment: Alignment.centerRight,
-                      child: _airportInfo(
-                        time: flight.departureTime,
-                        code: flight.departureCode,
-                        city:flight.departureCity,
-                        isRight: true,
-                      ),
+                       alignment: Alignment.centerRight,
+                       child: _airportInfo(
+                         time: flight.arrivalTime,
+                         code: flight.arrivalAirport,
+                         city:flight.arrivalCity,
+                         isRight: true,
+                       ),
                     ),
                   ),
 

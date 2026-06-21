@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../../../../routes/app_pages.dart';
 import '../../controllers/flight_controller.dart';
 import '../widgets/flight_ticket_card.dart';
-import '../widgets/info_widget.dart';
 
 
 
@@ -13,47 +11,9 @@ class FlightListingScreen extends GetView<FlightController> {
 
   @override
   Widget build(BuildContext context) {
-    final flights = [
-      Flight(
-        airlineName: "Citilink Airline",
-        logoColor: const Color(0xffEAF8EE),
-        logoText: "Citilink",
-        departureTime: "07:47",
-        departureCode: "CGK",
-        departureCity: "Jakarta",
-        arrivalTime: "14:30",
-        arrivalCode: "NRT",
-        arrivalCity: "Tokyo",
-        duration: "7h 15m",
-        price: 321,
-      ),
-      Flight(
-        airlineName: "Catty Airline",
-        logoColor: const Color(0xffFFF1F1),
-        logoText: "Cat Air",
-        departureTime: "07:47",
-        departureCode: "CGK",
-        departureCity: "Jakarta",
-        arrivalTime: "14:30",
-        arrivalCode: "NRT",
-        arrivalCity: "Tokyo",
-        duration: "7h 20m",
-        price: 321,
-      ),
-      Flight(
-        airlineName: "Bird Indonesia Airline",
-        logoColor: const Color(0xffF2F2F2),
-        logoText: "Bird",
-        departureTime: "07:47",
-        departureCode: "CGK",
-        departureCity: "Jakarta",
-        arrivalTime: "14:30",
-        arrivalCode: "NRT",
-        arrivalCity: "Tokyo",
-        duration: "7h 20m",
-        price: 321,
-      ),
-    ];
+    // use flights from controller (populated by FlightApiService.searchFlights)
+    // controller is available via GetView
+    final flights = controller.flights;
 
     return Scaffold(
       backgroundColor: const Color(0xffF5F5F7),
@@ -127,123 +87,117 @@ class FlightListingScreen extends GetView<FlightController> {
 
             /// FLIGHT LIST
             Expanded(
-              child: ListView.separated(
-                padding:
-                EdgeInsets.symmetric(horizontal: 15.w),
-                itemCount: flights.length,
-                separatorBuilder: (context, index) =>
-                    SizedBox(height: 6.h),
-                itemBuilder: (context, index) {
-                  final flight = flights[index];
-                  return FlightTicketCard(
-                    flight:flight,
-                    height:200.h,
-                    width: 350.w,
-                    cutPosition:120.h ,
-                    bottomWidget:  Row(
-                      children: [
-                        Column(
-                          crossAxisAlignment:
-                          CrossAxisAlignment
-                              .start,
-                          children: [
-                            Text(
-                              "\$${flight.price}",
-                              style:
-                               TextStyle(
-                                color: Color(
-                                    0xff2F6BFF),
-                                fontSize: 16.h,
-                                fontWeight:
-                                FontWeight
-                                    .w700,
+              child: Obx(() {
+                final list = controller.flights;
+                return ListView.separated(
+                  padding: EdgeInsets.symmetric(horizontal: 15.w),
+                  itemCount: list.length,
+                  separatorBuilder: (context, index) => SizedBox(height: 6.h),
+                  itemBuilder: (context, index) {
+                    final flight = list[index];
+                    return FlightTicketCard(
+                      flight: flight,
+                      height: 200.h,
+                      width: 350.w,
+                      cutPosition: 120.h,
+                      bottomWidget: Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "\$${flight.priceAmount}",
+                                style: TextStyle(
+                                  color: const Color(0xff2F6BFF),
+                                  fontSize: 16.h,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              Text(
+                                "/person",
+                                style: TextStyle(
+                                  fontSize: 12.h,
+                                  color: Colors.black54,
+                                ),
+                              )
+                            ],
+                          ),
+                          const Spacer(),
+                          SizedBox(
+                            height: 35.h,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                controller.selectFlight(flight);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.black,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 28),
+                              ),
+                              child: Text(
+                                "Select flight",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14.h,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ),
-                             Text(
-                              "/person",
-                              style: TextStyle(
-                                fontSize: 12.h,
-                                color:
-                                Colors.black54,
+                          )
+                        ],
+                      ),
+                      headerWidget: Row(
+                        children: [
+                          if (flight.airlineLogo.isNotEmpty)
+                            Container(
+                              width: 46.h,
+                              height: 46.h,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                              ),
+                              child: ClipOval(
+                                child: Image.network(
+                                  flight.airlineLogo,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, __, ___) => Container(color: const Color(0xffEAF8EE)),
+                                ),
                               ),
                             )
-                          ],
-                        ),
-                        const Spacer(),
-                        SizedBox(
-                          height: 35.h,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Get.toNamed(Routes.flightDetails);
-                            },
-                            style:
-                            ElevatedButton
-                                .styleFrom(
-                              backgroundColor:
-                              Colors.black,
-                              shape:
-                              RoundedRectangleBorder(
-                                borderRadius:
-                                BorderRadius
-                                    .circular(
-                                    30),
+                          else
+                            Container(
+                              width: 46.h,
+                              height: 46.h,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: const Color(0xffEAF8EE),
                               ),
-                              padding:
-                              const EdgeInsets
-                                  .symmetric(
-                                horizontal: 28,
+                              alignment: Alignment.center,
+                              child: Text(
+                                flight.airlineName.isNotEmpty ? flight.airlineName[0] : '?',
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700,
+                                ),
                               ),
                             ),
-                            child:  Text(
-                              "Select flight",
-                              style:
-                              TextStyle(
-                                color:
-                                Colors.white,
-                                fontSize: 14.h,
-                                fontWeight:
-                                FontWeight
-                                    .w600,
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Text(
+                              flight.airlineName,
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
-                          ),
-                        )
-                      ],
-                    ),
-                    headerWidget: Row(
-                      children: [
-                        Container(
-                          width: 46.h,
-                          height: 46.h,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: flight.logoColor,
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            flight.logoText,
-                            style: const TextStyle(
-                              fontSize: 8,
-                              fontWeight:
-                              FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 14),
-                        Expanded(
-                          child: Text(
-                            flight.airlineName,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight:
-                              FontWeight.w600,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),);
-                },
-              ),
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                );
+              }),
             ),
           ],
         ),

@@ -170,7 +170,7 @@ class _SearchFlightCardState extends State<SearchFlightCard> {
                 ),
               ),
               onPressed: () {
-                Get.toNamed(Routes.flightResults);
+                controller.searchFlights();
               },
               child: Text(
                 'Search flights',

@@ -104,20 +104,48 @@ class FlightController extends GetxController {
       // show loading
       isLoading.value = true;
       Get.dialog(const Center(child: CircularProgressIndicator()), barrierDismissible: false);
-      String extractCode(String s) {
-        final match = RegExp(r"\(([^)]+)\)").firstMatch(s);
-        if (match != null && match.groupCount >= 1) return match.group(1)!;
-        // fallback: if value looks like an airport code already
-        if (s.trim().length <= 4 && s.trim().toUpperCase() == s.trim()) return s.trim();
-        // otherwise return last token
-        final parts = s.trim().split(RegExp(r"\s+"));
-        return parts.isNotEmpty ? parts.last : s;
+      // helper to get airport code from selected Airport or from fallback string
+      String extractCodeFromAirportOrString() {
+        // prefer the selected Airport (from1/to1) if set
+        String fromCode = '';
+        if (from1.value != null) {
+          fromCode = from1.value!.airportCode;
+        } else if (from.value.isNotEmpty) {
+          final match = RegExp(r"\(([^)]+)\)").firstMatch(from.value);
+          if (match != null && match.groupCount >= 1) {
+            fromCode = match.group(1)!;
+          } else {
+            final parts = from.value.trim().split(RegExp(r"\s+"));
+            fromCode = parts.isNotEmpty ? parts.last : from.value;
+          }
+        }
+
+        return fromCode;
       }
 
+      String extractCodeToAirportOrString() {
+        String toCode = '';
+        if (to1.value != null) {
+          toCode = to1.value!.airportCode;
+        } else if (to.value.isNotEmpty) {
+          final match = RegExp(r"\(([^)]+)\)").firstMatch(to.value);
+          if (match != null && match.groupCount >= 1) {
+            toCode = match.group(1)!;
+          } else {
+            final parts = to.value.trim().split(RegExp(r"\s+"));
+            toCode = parts.isNotEmpty ? parts.last : to.value;
+          }
+        }
+        return toCode;
+      }
+
+      final fromCode = extractCodeFromAirportOrString();
+      final toCode = extractCodeToAirportOrString();
+
       final results = await FlightApiService.searchFlights(
-        from: extractCode(from.value),
-        to: extractCode(to.value),
-        passengers: people.value,
+        from: fromCode,
+        to: toCode,
+        passengers: passengerCount.value,
         sortBy: 'price_asc',
       );
       flights.value = results;
