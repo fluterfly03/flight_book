@@ -124,15 +124,17 @@ class _SearchFlightCardState extends State<SearchFlightCard> {
           /// DEPARTURE + AMOUNT
           Row(
             children: [
-              Expanded(
-                child: CustomTile(
-                  title: 'Departure',
-                  value: DateFormat(
-                    'EEE, d MMM',
-                  ).format(controller.departureDate.value),
-                  icon: Icons.calendar_today_outlined,
-                  onTap: () =>
-                      controller.pickDepartureDate(context),
+              Obx(
+    ()=>Expanded(
+                  child: CustomTile(
+                    title: 'Departure',
+                    value: DateFormat(
+                      'EEE, d MMM',
+                    ).format(controller.departureDate.value),
+                    icon: Icons.calendar_today_outlined,
+                    onTap: () =>
+                        controller.pickDepartureDate(context),
+                  ),
                 ),
               ),
               SizedBox(width: 16.w),
