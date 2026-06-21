@@ -5,11 +5,11 @@ import 'package:get/get.dart';
 import '../../../../routes/app_pages.dart';
 import '../../controllers/flight_controller.dart';
 import '../widgets/bottom_nav_bar.dart';
-import '../widgets/date_widget.dart';
-import '../widgets/flight_ticket_s_card.dart';
+import '../widgets/flight_ticket_card.dart';
 import '../widgets/half_dotted_circle painter.dart';
 import '../widgets/info_widget.dart';
 import '../widgets/search_flight_card.dart';
+import 'flight_listing_screen.dart';
 
 
 class PlanTripScreen extends GetView<FlightController> {
@@ -137,7 +137,20 @@ class PlanTripScreen extends GetView<FlightController> {
                     separatorBuilder: (_, __) =>
                     SizedBox(width: 18.w),
                     itemBuilder: (_, __) {
-                      return  FlightTicket(
+                      return  FlightTicketCard(
+                        flight:Flight(
+                          airlineName: "Citilink Airline",
+                          logoColor: const Color(0xffEAF8EE),
+                          logoText: "Citilink",
+                          departureTime: "07:47",
+                          departureCode: "CGK",
+                          departureCity: "Jakarta",
+                          arrivalTime: "14:30",
+                          arrivalCode: "NRT",
+                          arrivalCity: "Tokyo",
+                          duration: "7h 15m",
+                          price: 321,
+                        ),
                         height: 180.h,
                         width: 300.w,
                         cutPosition:100.h ,

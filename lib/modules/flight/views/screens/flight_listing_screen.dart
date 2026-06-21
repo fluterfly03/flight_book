@@ -3,7 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../../routes/app_pages.dart';
 import '../../controllers/flight_controller.dart';
-import '../widgets/flight_details_card.dart';
+import '../widgets/flight_ticket_card.dart';
+import '../widgets/info_widget.dart';
 
 
 
@@ -126,14 +127,121 @@ class FlightListingScreen extends GetView<FlightController> {
 
             /// FLIGHT LIST
             Expanded(
-              child: ListView.builder(
+              child: ListView.separated(
+                padding:
+                EdgeInsets.symmetric(horizontal: 15.w),
                 itemCount: flights.length,
+                separatorBuilder: (context, index) =>
+                    SizedBox(height: 6.h),
                 itemBuilder: (context, index) {
                   final flight = flights[index];
-
-                  return FlightListingCard(
-                    flight: flight,
-                  );
+                  return FlightTicketCard(
+                    flight:flight,
+                    height:200.h,
+                    width: 350.w,
+                    cutPosition:120.h ,
+                    bottomWidget:  Row(
+                      children: [
+                        Column(
+                          crossAxisAlignment:
+                          CrossAxisAlignment
+                              .start,
+                          children: [
+                            Text(
+                              "\$${flight.price}",
+                              style:
+                               TextStyle(
+                                color: Color(
+                                    0xff2F6BFF),
+                                fontSize: 16.h,
+                                fontWeight:
+                                FontWeight
+                                    .w700,
+                              ),
+                            ),
+                             Text(
+                              "/person",
+                              style: TextStyle(
+                                fontSize: 12.h,
+                                color:
+                                Colors.black54,
+                              ),
+                            )
+                          ],
+                        ),
+                        const Spacer(),
+                        SizedBox(
+                          height: 35.h,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Get.toNamed(Routes.flightDetails);
+                            },
+                            style:
+                            ElevatedButton
+                                .styleFrom(
+                              backgroundColor:
+                              Colors.black,
+                              shape:
+                              RoundedRectangleBorder(
+                                borderRadius:
+                                BorderRadius
+                                    .circular(
+                                    30),
+                              ),
+                              padding:
+                              const EdgeInsets
+                                  .symmetric(
+                                horizontal: 28,
+                              ),
+                            ),
+                            child:  Text(
+                              "Select flight",
+                              style:
+                              TextStyle(
+                                color:
+                                Colors.white,
+                                fontSize: 14.h,
+                                fontWeight:
+                                FontWeight
+                                    .w600,
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    headerWidget: Row(
+                      children: [
+                        Container(
+                          width: 46.h,
+                          height: 46.h,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: flight.logoColor,
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            flight.logoText,
+                            style: const TextStyle(
+                              fontSize: 8,
+                              fontWeight:
+                              FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Text(
+                            flight.airlineName,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight:
+                              FontWeight.w600,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),);
                 },
               ),
             ),

@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 import '../../controllers/flight_controller.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/flight_ticket_card.dart';
-import '../widgets/flight_ticket_s_card.dart';
 import '../widgets/info_widget.dart';
+import 'flight_listing_screen.dart';
 
 class FlightDetailsScreen extends GetView<FlightController> {
   const FlightDetailsScreen({super.key});
@@ -43,7 +43,20 @@ class FlightDetailsScreen extends GetView<FlightController> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      FlightTicket(
+                      FlightTicketCard(
+                        flight:Flight(
+                          airlineName: "Citilink Airline",
+                          logoColor: const Color(0xffEAF8EE),
+                          logoText: "Citilink",
+                          departureTime: "07:47",
+                          departureCode: "CGK",
+                          departureCity: "Jakarta",
+                          arrivalTime: "14:30",
+                          arrivalCode: "NRT",
+                          arrivalCity: "Tokyo",
+                          duration: "7h 15m",
+                          price: 321,
+                        ),
                         height:200.h,
                         width: 350.w,
                         cutPosition:120.h ,
