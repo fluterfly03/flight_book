@@ -186,7 +186,7 @@ class FlightTicketCard extends StatelessWidget {
             Text(
               '($city)',
               style: TextStyle(
-                fontSize: 15.sp,
+                fontSize: 10.sp,
                 color: Colors.grey.shade500,
                 fontWeight: FontWeight.w400,
               ),

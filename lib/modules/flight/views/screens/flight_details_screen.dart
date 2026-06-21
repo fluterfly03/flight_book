@@ -45,7 +45,7 @@ class FlightDetailsScreen extends GetView<FlightController> {
             child: Column(
               children: [
                 /// APP BAR
-                CustomAppBarr(),
+                CustomAppBar(title: 'Your flight details',),
                 const SizedBox(height: 28),
 
                 Expanded(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../controllers/flight_controller.dart';
+import '../widgets/custom_app_bar.dart';
 import '../widgets/flight_ticket_card.dart';
 
 
@@ -14,7 +15,7 @@ class FlightListingScreen extends GetView<FlightController> {
     // controller is available via GetView
 final isPriceLowToHigh = true.obs; // This should come from your controller's state
     return Scaffold(
-      backgroundColor: const Color(0xffF5F5F7),
+      backgroundColor: Color(0xffcddcf9),
       floatingActionButton: Container(
         width: 70,
         height: 70,
@@ -36,185 +37,177 @@ final isPriceLowToHigh = true.obs; // This should come from your controller's st
         ),
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 12),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xffcddcf9), Colors.white, Colors.white],
+            ),
+          ),
+          padding:     EdgeInsets.symmetric(horizontal: 15.w, vertical: 12.h),
 
-            /// TOP BAR
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                children: [
-                  _circleButton(Icons.arrow_back_ios_new),
-                  const Spacer(),
-                  const Text(
-                    "Flight result",
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w600,
+          child: Column(
+            children: [
+              SizedBox(height: 10.h),
+
+              /// TOP BAR
+
+              CustomAppBar(title: "Flight result",trailingWidget: _circleButton(Icons.more_vert),),
+               SizedBox(height: 20.h),
+
+              /// FILTER CHIPS
+              SizedBox(
+                height: 46,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    GestureDetector(
+                      onTap: () => isPriceLowToHigh.value = !isPriceLowToHigh.value,
+                      child: Obx(() {
+                        return _chip(
+                          "Lowest to Highest",
+                          selected: isPriceLowToHigh.value,
+                        );
+                      }),
                     ),
-                  ),
-                  const Spacer(),
-                  _circleButton(Icons.more_vert),
-                ],
+                    const SizedBox(width: 12),
+                    GestureDetector(
+                      onTap: () => controller.openAirlinesSelector(),
+                      child: Obx(() {
+                        final selected = controller.selectedAirlines.value;
+                        return _chip(selected.isNotEmpty ? selected : "Preferred airlines",selected: selected.isNotEmpty);
+                      }),
+                    ),
+                    const SizedBox(width: 12),
+                    GestureDetector(
+                      onTap: () => controller.openAircraftTypeSelector(),
+                      child: Obx(() {
+                        final selected = controller.selectedAircraftType.value;
+                        return _chip(selected.isNotEmpty ? selected : "Flight type",selected: selected.isNotEmpty);
+                      }),
+                    ),
+                  ],
+                ),
               ),
-            ),
 
-            const SizedBox(height: 28),
+              SizedBox(height: 15.h),
 
-            /// FILTER CHIPS
-            SizedBox(
-              height: 46,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                children: [
-                  GestureDetector(
-                    onTap: () => isPriceLowToHigh.value = !isPriceLowToHigh.value,
-                    child: Obx(() {
-                      return _chip(
-                        "Lowest to Highest",
-                        selected: isPriceLowToHigh.value,
-                      );
-                    }),
-                  ),
-                  const SizedBox(width: 12),
-                  GestureDetector(
-                    onTap: () => controller.openAirlinesSelector(),
-                    child: Obx(() {
-                      final selected = controller.selectedAirlines.value;
-                      return _chip(selected.isNotEmpty ? selected : "Preferred airlines",selected: selected.isNotEmpty);
-                    }),
-                  ),
-                  const SizedBox(width: 12),
-                  GestureDetector(
-                    onTap: () => controller.openAircraftTypeSelector(),
-                    child: Obx(() {
-                      final selected = controller.selectedAircraftType.value;
-                      return _chip(selected.isNotEmpty ? selected : "Flight type",selected: selected.isNotEmpty);
-                    }),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            /// FLIGHT LIST
-            Expanded(
-              child: Obx(() {
-                final list = controller.flights;
-                return ListView.separated(
-                  padding: EdgeInsets.symmetric(horizontal: 15.w),
-                  itemCount: list.length,
-                  separatorBuilder: (context, index) => SizedBox(height: 6.h),
-                  itemBuilder: (context, index) {
-                    final flight = list[index];
-                    return FlightTicketCard(
-                      flight: flight,
-                      height: 200.h,
-                      width: 350.w,
-                      cutPosition: 120.h,
-                      bottomWidget: Row(
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "\$${flight.priceAmount}",
-                                style: TextStyle(
-                                  color: const Color(0xff2F6BFF),
-                                  fontSize: 16.h,
-                                  fontWeight: FontWeight.w700,
+              /// FLIGHT LIST
+              Expanded(
+                child: Obx(() {
+                  final list = controller.flights;
+                  return ListView.separated(
+                    itemCount: list.length,
+                    separatorBuilder: (context, index) => SizedBox(height: 6.h),
+                    itemBuilder: (context, index) {
+                      final flight = list[index];
+                      return FlightTicketCard(
+                        flight: flight,
+                        height: 200.h,
+                        width: 350.w,
+                        cutPosition: 120.h,
+                        bottomWidget: Row(
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "\$${flight.priceAmount}",
+                                  style: TextStyle(
+                                    color: const Color(0xff2F6BFF),
+                                    fontSize: 16.h,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                "/person",
-                                style: TextStyle(
-                                  fontSize: 12.h,
-                                  color: Colors.black54,
-                                ),
-                              )
-                            ],
-                          ),
-                          const Spacer(),
-                          SizedBox(
-                            height: 35.h,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                controller.selectFlight(flight);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.black,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                padding: const EdgeInsets.symmetric(horizontal: 28),
-                              ),
-                              child: Text(
-                                "Select flight",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14.h,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
+                                Text(
+                                  "/person",
+                                  style: TextStyle(
+                                    fontSize: 12.h,
+                                    color: Colors.black54,
+                                  ),
+                                )
+                              ],
                             ),
-                          )
-                        ],
-                      ),
-                      headerWidget: Row(
-                        children: [
-                          if (flight.airlineLogo.isNotEmpty)
-                            Container(
-                              width: 46.h,
-                              height: 46.h,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                              ),
-                              child: ClipOval(
-                                child: Image.network(
-                                  flight.airlineLogo,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (_, __, ___) => Container(color: const Color(0xffEAF8EE)),
+                            const Spacer(),
+                            SizedBox(
+                              height: 35.h,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  controller.selectFlight(flight);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.black,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(horizontal: 28),
+                                ),
+                                child: Text(
+                                  "Select flight",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14.h,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
                             )
-                          else
-                            Container(
-                              width: 46.h,
-                              height: 46.h,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: const Color(0xffEAF8EE),
-                              ),
-                              alignment: Alignment.center,
-                              child: Text(
-                                flight.airlineName.isNotEmpty ? flight.airlineName[0] : '?',
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w700,
+                          ],
+                        ),
+                        headerWidget: Row(
+                          children: [
+                            if (flight.airlineLogo.isNotEmpty)
+                              Container(
+                                width: 46.h,
+                                height: 46.h,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                ),
+                                child: ClipOval(
+                                  child: Image.network(
+                                    flight.airlineLogo,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, __, ___) => Container(color: const Color(0xffEAF8EE)),
+                                  ),
+                                ),
+                              )
+                            else
+                              Container(
+                                width: 46.h,
+                                height: 46.h,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: const Color(0xffEAF8EE),
+                                ),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  flight.airlineName.isNotEmpty ? flight.airlineName[0] : '?',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                               ),
-                            ),
-                          const SizedBox(width: 14),
-                          Expanded(
-                            child: Text(
-                              flight.airlineName,
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
+                            const SizedBox(width: 14),
+                            Expanded(
+                              child: Text(
+                                flight.airlineName,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
-                            ),
-                          )
-                        ],
-                      ),
-                    );
-                  },
-                );
-              }),
-            ),
-          ],
+                            )
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                }),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -222,15 +215,16 @@ final isPriceLowToHigh = true.obs; // This should come from your controller's st
 
   static Widget _circleButton(IconData icon) {
     return Container(
-      width: 50,
-      height: 50,
+      width: 40.h,
+      height: 40.h,
       decoration: const BoxDecoration(
         color: Colors.white,
         shape: BoxShape.circle,
       ),
       child: Icon(
         icon,
-        size: 22,
+        size: 18.h,
+        color: Colors.grey,
       ),
     );
   }

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
-class CustomAppBarr extends StatelessWidget {
-  const CustomAppBarr({super.key});
+class CustomAppBar extends StatelessWidget {
+  final String title;
+  final Widget? trailingWidget;
+  const CustomAppBar({super.key,required this.title,this.trailingWidget});
 
   @override
   Widget build(BuildContext context) {
@@ -13,13 +16,14 @@ class CustomAppBarr extends StatelessWidget {
         ),
         const Spacer(),
          Text(
-          'Your flight details',
+          title,
           style: TextStyle(
             fontSize: 20.sp,
             fontWeight: FontWeight.w600,
           ),
         ),
         const Spacer(),
+        trailingWidget??
         const SizedBox(width: 50),
       ],
     );
@@ -27,17 +31,21 @@ class CustomAppBarr extends StatelessWidget {
   static Widget _circleButton(
       IconData icon,
       ) {
-    return Container(
-      width: 40.h,
-      height: 40.h,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.circle,
-      ),
-      child: Icon(
-        icon,
-        size: 18.h,
-        color: Colors.grey,
+    return GestureDetector(
+      onTap: ()=>Get.back(),
+
+      child: Container(
+        width: 40.h,
+        height: 40.h,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+        ),
+        child: Icon(
+          icon,
+          size: 18.h,
+          color: Colors.grey,
+        ),
       ),
     );
   }
