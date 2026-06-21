@@ -1,13 +1,100 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../models/airport_model.dart';
 import '../models/flight_model.dart';
 import '../../../routes/app_pages.dart';
 import '../services/api_client.dart';
 import '../services/flight_api_service.dart';
+import '../views/widgets/pasanger_selector.dart';
 
 class FlightController extends GetxController {
   final from = 'Jakarta (CGK)'.obs;
   final to = 'Tokyo (NRT)'.obs;
+  final airports = <Airport>[].obs;
+  final from1 = Rxn<Airport>();
+  final to1 = Rxn<Airport>();
+  final passengerCount = 1.obs;
+
+  void incrementPassenger() {
+    passengerCount.value++;
+  }
+
+  void decrementPassenger() {
+    if (passengerCount.value > 1) {
+      passengerCount.value--;
+    }
+  }
+
+  void openPassengerSelector() {
+    Get.bottomSheet(
+      PasangerSelector(),
+    );
+  }
+
+  void swapLocations() {
+    final temp = from1.value;
+    from1.value = to1.value;
+    to1.value = temp;
+  }
+  final departureDate = DateTime.now().obs;
+
+  Future<void> pickDepartureDate(BuildContext context) async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: departureDate.value,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2035),
+    );
+
+    if (picked != null) {
+      departureDate.value = picked;
+    }
+  }
+  @override
+  void onInit() {
+    super.onInit();
+
+    /// Replace this with your API response
+    final response = [
+      {
+        "airport_code": "NRT",
+        "city": "Tokyo",
+        "flight_count": 10
+      },
+      {
+        "airport_code": "CGK",
+        "city": "Jakarta",
+        "flight_count": 8
+      },
+      {
+        "airport_code": "SIN",
+        "city": "Singapore",
+        "flight_count": 12
+      },
+      {
+        "airport_code": "DEL",
+        "city": "Delhi",
+        "flight_count": 15
+      },
+    ];
+
+    airports.assignAll(
+      response.map((e) => Airport.fromJson(e)).toList(),
+    );
+
+    if (airports.length >= 2) {
+      from1.value = airports[1]; // Jakarta
+      to1.value = airports[0]; // Tokyo
+    }
+  }
+
+  void setFrom(Airport airport) {
+    from1.value = airport;
+  }
+
+  void setTo(Airport airport) {
+    to1.value = airport;
+  }
   final people = 3.obs;
 
   // start with empty list; searchFlights will populate via API
@@ -16,11 +103,6 @@ class FlightController extends GetxController {
   final selectedFlight = Rxn<FlightModel>();
   final isLoading = false.obs;
 
-  void swapLocations() {
-    final temp = from.value;
-    from.value = to.value;
-    to.value = temp;
-  }
 
   void searchFlights() {
     // perform API search then navigate to results

@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../routes/app_pages.dart';
+import '../../controllers/flight_controller.dart';
+import '../../models/airport_model.dart';
+import 'custom_tile.dart';
+import 'dc.dart';
 
 class SearchFlightCard extends StatefulWidget {
   const SearchFlightCard({super.key});
@@ -13,6 +19,8 @@ class SearchFlightCard extends StatefulWidget {
 }
 
 class _SearchFlightCardState extends State<SearchFlightCard> {
+  final FlightController controller =
+  Get.put(FlightController());
   @override
   Widget build(BuildContext context) {
     return     Container(
@@ -45,9 +53,13 @@ class _SearchFlightCardState extends State<SearchFlightCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           /// FROM
-          _locationTile(
-            label: 'From',
-            value: 'Jakarta (CGK)',
+          Obx(
+                () => _airportField(
+              label: 'From',
+              selected: controller.from1.value,
+              airports: controller.airports,
+              onSelected: controller.setFrom,
+            ),
           ),
 
           SizedBox(height: 10.h),
@@ -85,9 +97,7 @@ class _SearchFlightCardState extends State<SearchFlightCard> {
                       Icons.swap_vert,
                       color: Color(0xff6B7280),
                     ),
-                    onPressed: () {
-                      // swap logic
-                    },
+                    onPressed:controller.swapLocations,
                   ),
                 ),
               ),
@@ -97,9 +107,13 @@ class _SearchFlightCardState extends State<SearchFlightCard> {
           SizedBox(height: 10.h),
 
           /// TO
-          _locationTile(
-            label: 'To',
-            value: 'Tokyo (NRT)',
+          Obx(
+                () => _airportField(
+              label: 'To',
+              selected: controller.to1.value,
+              airports: controller.airports,
+              onSelected: controller.setTo,
+            ),
           ),
 
           Divider(
@@ -112,18 +126,28 @@ class _SearchFlightCardState extends State<SearchFlightCard> {
           Row(
             children: [
               Expanded(
-                child: _infoTile(
+                child: CustomTile(
                   title: 'Departure',
-                  value: 'Tue, 2 Apr',
+                  value: DateFormat(
+                    'EEE, d MMM',
+                  ).format(controller.departureDate.value),
                   icon: Icons.calendar_today_outlined,
+                  onTap: () =>
+                      controller.pickDepartureDate(context),
                 ),
               ),
               SizedBox(width: 16.w),
-              Expanded(
-                child: _infoTile(
-                  title: 'Amount',
-                  value: '3 people',
-                  icon: Icons.keyboard_arrow_down,
+              Obx(()=>
+                 Expanded(
+                  child: CustomTile(
+                    title: 'Amount',
+                    value:
+                    '${controller.passengerCount.value} ${controller.passengerCount.value == 1 ? 'person' : 'people'}',
+                    icon: Icons.keyboard_arrow_down,
+                    onTap: controller.openPassengerSelector,
+
+
+                  ),
                 ),
               ),
             ],
@@ -161,6 +185,109 @@ class _SearchFlightCardState extends State<SearchFlightCard> {
       ),
     );
   }
+  Widget _airportField({
+    required String label,
+    required Airport? selected,
+    required List<Airport> airports,
+    required Function(Airport) onSelected,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 11.sp,
+          ),
+        ),
+        Autocomplete<Airport>(
+          initialValue: TextEditingValue(
+            text: selected?.display ?? '',
+          ),
+          displayStringForOption: (airport) =>
+          airport.display,
+          optionsBuilder: (textEditingValue) {
+            final query =
+            textEditingValue.text.toLowerCase();
+
+            if (query.isEmpty) {
+              return airports;
+            }
+
+            return airports.where(
+                  (airport) =>
+              airport.city
+                  .toLowerCase()
+                  .contains(query) ||
+                  airport.airportCode
+                      .toLowerCase()
+                      .contains(query),
+            );
+          },
+          onSelected: onSelected,
+          fieldViewBuilder: (
+              context,
+              textController,
+              focusNode,
+              onFieldSubmitted,
+              ) {
+            textController.text =
+                selected?.display ?? '';
+
+            return TextField(
+              controller: textController,
+              focusNode: focusNode,
+              decoration: InputDecoration(
+                hintText: 'Search airport',
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 1.w,
+                  vertical: 1.h,
+                ),
+              ),
+            );
+          },
+          optionsViewBuilder:
+              (context, onSelected, options) {
+            return Align(
+              alignment: Alignment.topLeft,
+              child: Material(
+                elevation: 4,
+                borderRadius:
+                BorderRadius.circular(16.r),
+                child: Container(
+                  width: 320.w,
+                  constraints: BoxConstraints(
+                    maxHeight: 250.h,
+                  ),
+                  child: ListView.builder(
+                    padding: EdgeInsets.zero,
+                    itemCount: options.length,
+                    itemBuilder: (context, index) {
+                      final airport =
+                      options.elementAt(index);
+
+                      return ListTile(
+                        title: Text(
+                          airport.display,
+                        ),
+                        subtitle: Text(
+                          '${airport.flightCount} flights',
+                        ),
+                        onTap: () =>
+                            onSelected(airport),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
   Widget _locationTile({
     required String label,
     required String value,
@@ -185,40 +312,4 @@ class _SearchFlightCardState extends State<SearchFlightCard> {
     );
   }
 
-  Widget _infoTile({
-    required String title,
-    required String value,
-    required IconData icon,
-  })
-  {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style:
-          TextStyle(color: Colors.grey, fontSize: 12.sp),
-        ),
-        SizedBox(height: 10.h),
-        Row(
-          children: [
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const Spacer(),
-            Icon(icon, size: 16.sp)
-          ],
-        ),
-        Divider(
-          height: 20.h,
-          thickness: 1,
-          color: Colors.grey.shade300,
-        ),
-      ],
-    );
-  }
 }
