@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../models/airport_model.dart';
 import '../models/flight_model.dart';
+import '../models/flight_details_model.dart';
 import '../../../routes/app_pages.dart';
 import '../services/api_client.dart';
 import '../services/flight_api_service.dart';
@@ -37,7 +38,10 @@ class FlightController extends GetxController {
     from1.value = to1.value;
     to1.value = temp;
   }
-  final departureDate = DateTime.now().obs;
+
+  final departureDate = DateTime
+      .now()
+      .obs;
 
   Future<void> pickDepartureDate(BuildContext context) async {
     final picked = await showDatePicker(
@@ -51,6 +55,7 @@ class FlightController extends GetxController {
       departureDate.value = picked;
     }
   }
+
   @override
   void onInit() {
     super.onInit();
@@ -85,12 +90,14 @@ class FlightController extends GetxController {
   void setTo(Airport airport) {
     to1.value = airport;
   }
+
   final people = 3.obs;
 
   // start with empty list; searchFlights will populate via API
   final flights = <FlightModel>[].obs;
 
   final selectedFlight = Rxn<FlightModel>();
+  final selectedFlightDetails = Rxn<FlightDetailsResponse>();
   final isLoading = false.obs;
 
 
@@ -103,7 +110,8 @@ class FlightController extends GetxController {
     try {
       // show loading
       isLoading.value = true;
-      Get.dialog(const Center(child: CircularProgressIndicator()), barrierDismissible: false);
+      Get.dialog(const Center(child: CircularProgressIndicator()),
+          barrierDismissible: false);
       // helper to get airport code from selected Airport or from fallback string
       String extractCodeFromAirportOrString() {
         // prefer the selected Airport (from1/to1) if set
@@ -150,19 +158,54 @@ class FlightController extends GetxController {
       );
       flights.value = results;
       // close loading before navigation
-      try { Get.back(); } catch (_) {}
+      try {
+        Get.back();
+      } catch (_) {}
       isLoading.value = false;
       Get.toNamed(Routes.flightResults);
     } catch (e) {
-      try { Get.back(); } catch (_) {}
+      try {
+        Get.back();
+      } catch (_) {}
       isLoading.value = false;
-      final message = e is ApiException ? e.message : 'Something went wrong. Please try again.';
+      final message = e is ApiException
+          ? e.message
+          : 'Something went wrong. Please try again.';
       Get.snackbar('Error', message, snackPosition: SnackPosition.BOTTOM);
     }
   }
 
   void selectFlight(FlightModel flight) {
     selectedFlight.value = flight;
-    Get.toNamed(Routes.flightDetails);
+    _fetchFlightDetails(flight.id ?? 0);
+  }
+
+  Future<void> _fetchFlightDetails(int flightId) async {
+    try {
+      isLoading.value = true;
+      Get.dialog(const Center(child: CircularProgressIndicator()),
+          barrierDismissible: false);
+
+      final details = await FlightApiService.fetchFlightDetails(
+        flightId: flightId,
+      );
+      selectedFlightDetails.value = details;
+
+      // close loading before navigation
+      try {
+        Get.back();
+      } catch (_) {}
+      isLoading.value = false;
+      Get.toNamed(Routes.flightDetails);
+    } catch (e) {
+      try {
+        Get.back();
+      } catch (_) {}
+      isLoading.value = false;
+      final message = e is ApiException
+          ? e.message
+          : 'Failed to load flight details. Please try again.';
+      Get.snackbar('Error', message, snackPosition: SnackPosition.BOTTOM);
+    }
   }
 }

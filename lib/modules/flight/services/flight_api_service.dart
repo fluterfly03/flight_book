@@ -2,10 +2,12 @@ import 'dart:convert';
 
 import '../models/airport_model.dart';
 import '../models/flight_model.dart';
+import '../models/flight_details_model.dart';
 import 'api_client.dart';
 
 class FlightApiService {
   static const String _searchPath = '/flight_api.php/search';
+  static const String _flightPath = '/flight_api.php/flight';
   static const String _airportsFromPath = '/flight_api.php/airports/from';
   static const String _airportsToPath = '/flight_api.php/airports/to';
 
@@ -55,6 +57,43 @@ class FlightApiService {
       rethrow;
     } catch (e) {
       // Wrap unexpected errors
+      throw ApiException(e.toString());
+    }
+  }
+
+  /// Fetch flight details by ID
+  static Future<FlightDetailsResponse> fetchFlightDetails({
+    required int flightId,
+  }) async {
+    final body = {
+      'id': flightId,
+    };
+
+    final client = ApiClient.instance;
+    try {
+      final response = await client.post(_flightPath, data: body);
+
+      if (response.statusCode == 200 || response.statusCode == 202) {
+        final Map<String, dynamic> data = response.data is String
+            ? jsonDecode(response.data)
+            : response.data as Map<String, dynamic>;
+        if (data['status'] == 'success') {
+          return FlightDetailsResponse.fromJson(data);
+        } else if (response.statusCode == 202) {
+          // queued
+          throw ApiException('Request queued due to offline mode',
+              statusCode: response.statusCode);
+        } else {
+          throw ApiException(data['message'] ?? 'Unknown API error',
+              statusCode: response.statusCode);
+        }
+      } else {
+        throw ApiException('Network error: ${response.statusCode}',
+            statusCode: response.statusCode);
+      }
+    } on ApiException {
+      rethrow;
+    } catch (e) {
       throw ApiException(e.toString());
     }
   }

@@ -1,4 +1,5 @@
 import 'package:flight_book/modules/flight/models/flight_model.dart';
+import 'package:flight_book/modules/flight/models/flight_details_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -14,132 +15,175 @@ class FlightDetailsScreen extends GetView<FlightController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xffcddcf9),
-      body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xffcddcf9), Colors.white, Colors.white],
+    return Obx(() {
+      final flightDetails = controller.selectedFlightDetails.value;
+      final selectedFlight = controller.selectedFlight.value;
+
+      // Show loading if details not yet loaded
+      if (flightDetails == null || selectedFlight == null) {
+        return const Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+        );
+      }
+
+      final flight = flightDetails.data?.flightDetails;
+      final passengers = flightDetails.data?.passengers ?? [];
+      final booking = flightDetails.data?.bookingInfo;
+
+      return Scaffold(
+        backgroundColor: const Color(0xffcddcf9),
+        body: SafeArea(
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xffcddcf9), Colors.white, Colors.white],
+              ),
             ),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-          child: Column(
-            children: [
-              /// APP BAR
-              CustomAppBarr(),
-              const SizedBox(height: 28),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            child: Column(
+              children: [
+                /// APP BAR
+                CustomAppBarr(),
+                const SizedBox(height: 28),
 
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      FlightTicketCard(
-                        flight: FlightModel(
-                          airlineName: "Citilink Airline",
-                          departureTime: "07:47",
-                          departureCity: "Jakarta",
-                          arrivalTime: "14:30",
-                          arrivalCity: "Tokyo",
-                          duration: "7h 15m",
-                          airlineLogo: '',
-                          flightNumber: '',
-                          departureAirport: '',
-                          arrivalAirport: '',
-                          priceAmount: 122.56,
-                          priceCurrency: '',
-                          aircraftType: '',
-                          stops: 1,
-                        ),
-                        height: 200.h,
-                        width: 350.w,
-                        cutPosition: 120.h,
-                        bottomWidget: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
-                            Info(title: 'TERMINAL', value: '2A'),
-                            Info(title: 'GATE', value: '19'),
-                            Info(title: 'Class', value: 'Economy'),
-                          ],
-                        ),
-                        headerWidget: Row(
-                          children: [
-                            Container(
-                              width: 45.h,
-                              height: 45.h,
-                              decoration: const BoxDecoration(
-                                color: Color(0xffEAF8EE),
-                                shape: BoxShape.circle,
-                              ),
-                              alignment: Alignment.center,
-                              child: Text(
-                                'Citilink',
-                                style: TextStyle(
-                                  color: Colors.green,
-                                  fontSize: 9.sp,
-                                  fontWeight: FontWeight.w700,
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        if (flight != null)
+                          FlightTicketCard(
+                            flight: selectedFlight,
+                            height: 200.h,
+                            width: 350.w,
+                            cutPosition: 120.h,
+                            bottomWidget: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Info(
+                                    title: 'TERMINAL',
+                                    value: flight.terminal),
+                                Info(title: 'GATE', value: flight.gate),
+                                Info(
+                                    title: 'CLASS',
+                                    value: flight.classType),
+                              ],
+                            ),
+                            headerWidget: Row(
+                              children: [
+                                if (flight.airlineLogo.isNotEmpty)
+                                  Container(
+                                    width: 45.h,
+                                    height: 45.h,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: ClipOval(
+                                      child: Image.network(
+                                        flight.airlineLogo,
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (_, __, ___) =>
+                                            Container(
+                                          color: const Color(0xffEAF8EE),
+                                          child: Center(
+                                            child: Text(
+                                              flight.airlineName.isNotEmpty
+                                                  ? flight.airlineName[0]
+                                                  : '?',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                else
+                                  Container(
+                                    width: 45.h,
+                                    height: 45.h,
+                                    decoration: const BoxDecoration(
+                                      color: Color(0xffEAF8EE),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      flight.airlineName.isNotEmpty
+                                          ? flight.airlineName[0]
+                                          : '?',
+                                      style: const TextStyle(
+                                        color: Colors.green,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ),
+                                const SizedBox(width: 14),
+                                Expanded(
+                                  child: Text(
+                                    flight.airlineName,
+                                    style: TextStyle(
+                                      fontSize: 18.sp,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            const SizedBox(width: 14),
-                            Expanded(
-                              child: Text(
-                                'Citilink Airline',
-                                style: TextStyle(
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.w600,
+                                Text(
+                                  flight.flightNumber,
+                                  style: TextStyle(color: Colors.grey[500]),
                                 ),
-                              ),
-                            ),
-                            Text(
-                              'ID3242113',
-                              style: TextStyle(color: Colors.grey[500]),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      const SizedBox(height: 20),
-
-                      const PassengerCard(),
-
-                      const SizedBox(height: 30),
-
-                      SizedBox(
-                        width: double.infinity,
-                        height: 62,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.black,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(35),
+                              ],
                             ),
                           ),
-                          onPressed: () {},
-                          child: const Text(
-                            'Download & Save pass',
-                            style: TextStyle(fontSize: 18, color: Colors.white),
+
+                        const SizedBox(height: 20),
+
+                        if (passengers.isNotEmpty)
+                          PassengerCard(passengers: passengers)
+                        else
+                          const SizedBox.shrink(),
+
+                        const SizedBox(height: 30),
+
+                        SizedBox(
+                          width: double.infinity,
+                          height: 62,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.black,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(35),
+                              ),
+                            ),
+                            onPressed: () {},
+                            child: const Text(
+                              'Download & Save pass',
+                              style: TextStyle(
+                                  fontSize: 18, color: Colors.white),
+                            ),
                           ),
                         ),
-                      ),
 
-                      const SizedBox(height: 30),
-                    ],
+                        const SizedBox(height: 30),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
 
 class PassengerCard extends StatelessWidget {
-  const PassengerCard({super.key});
+  final List<Passenger> passengers;
+
+  const PassengerCard({super.key, required this.passengers});
 
   @override
   Widget build(BuildContext context) {
@@ -160,13 +204,20 @@ class PassengerCard extends StatelessWidget {
                 style: TextStyle(fontSize: 26, fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 20),
-
-              _passenger('Mr. Budiarti Rohman', 'PASSENGER 1', '3A'),
-
-              Divider(color: Colors.grey.shade300),
-
-              _passenger('Mrs. Samantha William', 'PASSENGER 2', '3B'),
-
+              ...passengers.asMap().entries.map((entry) {
+                final index = entry.key;
+                final passenger = entry.value;
+                return Column(
+                  children: [
+                    _passenger(passenger.name, 'PASSENGER ${passenger.passengerNumber}',
+                        passenger.seat, passenger.profilePicture),
+                    if (index < passengers.length - 1)
+                      Divider(color: Colors.grey.shade300)
+                    else
+                      const SizedBox.shrink(),
+                  ],
+                );
+              }).toList(),
               const SizedBox(height: 30),
 
               /// BARCODE
@@ -209,14 +260,13 @@ class PassengerCard extends StatelessWidget {
     );
   }
 
-  Widget _passenger(String name, String passenger, String seat) {
+  Widget _passenger(String name, String passenger, String seat, String profilePicture) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
-      leading: const CircleAvatar(
+      leading: CircleAvatar(
         radius: 24,
-        backgroundImage: NetworkImage(
-          'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
-        ),
+        backgroundImage: NetworkImage(profilePicture),
+        onBackgroundImageError: (_, __) {},
       ),
       title: Text(name, style: const TextStyle(fontWeight: FontWeight.w600)),
       subtitle: Text(
