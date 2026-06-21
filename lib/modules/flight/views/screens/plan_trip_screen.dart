@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../../routes/app_pages.dart';
 import '../../controllers/flight_controller.dart';
+import '../widgets/bottom_nav_bar.dart';
 import '../widgets/half_dotted_circle painter.dart';
 
 
@@ -555,17 +556,17 @@ class _DateWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment:
       CrossAxisAlignment.start,
-      children: const [
+      children:  [
         Text(
           'DATE',
           style:
-          TextStyle(color: Colors.grey),
+          TextStyle(color: Colors.grey,fontSize: 10.sp),
         ),
-        SizedBox(height: 8),
+        SizedBox(height: 1.h),
         Text(
           'Jan 20, 2025',
           style: TextStyle(
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w500,fontSize: 13.sp
           ),
         )
       ],
@@ -573,62 +574,3 @@ class _DateWidget extends StatelessWidget {
   }
 }
 
-class BottomBar extends StatelessWidget {
-  const BottomBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 90.h,
-      decoration: BoxDecoration(
-        color: Colors.white,
-
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 20,
-            offset: const Offset(0, -5),
-          ),
-        ],
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 30.w),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _navItem(
-            icon: Icons.home,
-            selected: true,
-          ),
-          _navItem(
-            icon: Icons.flight_outlined,
-          ),
-          _navItem(
-            icon: Icons.map_outlined,
-          ),
-          _navItem(
-            icon: Icons.person_outline,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _navItem({
-    required IconData icon,
-    bool selected = false,
-  }) {
-    return Container(
-      width: 28.w,
-      height: 28.h,
-      decoration: BoxDecoration(
-        color: selected ? Colors.blue : Colors.transparent,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Icon(
-        icon,
-        size: 18.sp,
-        color: selected ? Colors.white : Colors.grey,
-      ),
-    );
-  }
-}
