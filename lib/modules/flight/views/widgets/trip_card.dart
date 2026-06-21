@@ -24,7 +24,7 @@ class TripCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.08),
+              color: Color.fromRGBO(0, 0, 0, 0.08),
               blurRadius: 12.r,
               offset: const Offset(0, 4),
             ),
@@ -36,13 +36,45 @@ class TripCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  flight.airline,
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF1C7E2E),
-                  ),
+                Row(
+                  children: [
+                    // logo
+                    Container(
+                      width: 36.w,
+                      height: 36.w,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        shape: BoxShape.circle,
+                      ),
+                      child: ClipOval(
+                        child: flight.airlineLogo.isNotEmpty
+                            ? Image.network(
+                                flight.airlineLogo,
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, __, ___) => Center(
+                                    child: Text(
+                                  flight.airlineName.split(' ').first,
+                                  style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w700),
+                                )),
+                              )
+                            : Center(
+                                child: Text(
+                                  flight.airlineName.split(' ').first,
+                                  style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                      ),
+                    ),
+                    SizedBox(width: 8.w),
+                    Text(
+                      flight.airlineName,
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF1C7E2E),
+                      ),
+                    ),
+                  ],
                 ),
                 Text(
                   flight.duration,
@@ -63,7 +95,7 @@ class TripCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      flight.departureTime,
+                      _timeShort(flight.departureTime),
                       style: TextStyle(
                         fontSize: 18.sp,
                         fontWeight: FontWeight.bold,
@@ -71,7 +103,7 @@ class TripCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '${flight.departureAirport} (${flight.from})',
+                      '${flight.departureAirport} (${flight.departureCity})',
                       style: TextStyle(
                         fontSize: 11.sp,
                         color: Colors.grey[600],
@@ -90,7 +122,7 @@ class TripCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      flight.arrivalTime,
+                      _timeShort(flight.arrivalTime),
                       style: TextStyle(
                         fontSize: 18.sp,
                         fontWeight: FontWeight.bold,
@@ -98,7 +130,7 @@ class TripCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '${flight.arrivalAirport} (${flight.to})',
+                      '${flight.arrivalAirport} (${flight.arrivalCity})',
                       style: TextStyle(
                         fontSize: 11.sp,
                         color: Colors.grey[600],
@@ -128,7 +160,7 @@ class TripCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      flight.departureDate,
+                      '-',
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w500,
@@ -149,7 +181,7 @@ class TripCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      flight.arrivalDate,
+                      '-',
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w500,
@@ -170,7 +202,7 @@ class TripCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '\$${flight.price.toStringAsFixed(0)}',
+                      '\$${flight.priceAmount.toStringAsFixed(0)} ${flight.priceCurrency}',
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w600,
@@ -185,6 +217,13 @@ class TripCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _timeShort(String t) {
+    if (t.isEmpty) return '';
+    final parts = t.split(':');
+    if (parts.length >= 2) return '${parts[0]}:${parts[1]}';
+    return t;
   }
 }
 
