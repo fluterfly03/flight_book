@@ -12,7 +12,7 @@ class FlightListingScreen extends GetView<FlightController> {
   @override
   Widget build(BuildContext context) {
     // controller is available via GetView
-
+final isPriceLowToHigh = true.obs; // This should come from your controller's state
     return Scaffold(
       backgroundColor: const Color(0xffF5F5F7),
       floatingActionButton: Container(
@@ -69,18 +69,29 @@ class FlightListingScreen extends GetView<FlightController> {
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 children: [
-                  _chip(
-                    "Lowest to Highest",
-                    selected: true,
+                  GestureDetector(
+                    onTap: () => isPriceLowToHigh.value = !isPriceLowToHigh.value,
+                    child: Obx(() {
+                      return _chip(
+                        "Lowest to Highest",
+                        selected: isPriceLowToHigh.value,
+                      );
+                    }),
                   ),
                   const SizedBox(width: 12),
-                  _chip("Preferred airlines"),
+                  GestureDetector(
+                    onTap: () => controller.openAirlinesSelector(),
+                    child: Obx(() {
+                      final selected = controller.selectedAirlines.value;
+                      return _chip(selected.isNotEmpty ? selected : "Preferred airlines",selected: selected.isNotEmpty);
+                    }),
+                  ),
                   const SizedBox(width: 12),
                   GestureDetector(
                     onTap: () => controller.openAircraftTypeSelector(),
                     child: Obx(() {
                       final selected = controller.selectedAircraftType.value;
-                      return _chip(selected.isNotEmpty ? selected : "Flight type");
+                      return _chip(selected.isNotEmpty ? selected : "Flight type",selected: selected.isNotEmpty);
                     }),
                   ),
                 ],

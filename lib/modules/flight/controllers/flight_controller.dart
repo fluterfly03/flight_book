@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../models/airline_model.dart';
 import '../models/airport_model.dart';
 import '../models/flight_model.dart';
 import '../models/flight_details_model.dart';
@@ -8,6 +9,7 @@ import '../views/widgets/aircraft_type_selector.dart';
 import '../../../routes/app_pages.dart';
 import '../services/api_client.dart';
 import '../services/flight_api_service.dart';
+import '../views/widgets/airlines_selector.dart';
 import '../views/widgets/pasanger_selector.dart';
 
 class FlightController extends GetxController {
@@ -109,6 +111,14 @@ class FlightController extends GetxController {
   final isLoadingMoreAircraftTypes = false.obs;
   final selectedAircraftType = ''.obs;
 
+  // Airlines state for selector
+  final airlines = <Airline>[].obs;
+  final airlinesPage = 1.obs;
+  final airlinesHasNext = false.obs;
+  final isLoadingAirlines = false.obs;
+  final isLoadingMoreAirlines = false.obs;
+  final selectedAirlines = ''.obs;
+
 
   void searchFlights() {
     // perform API search then navigate to results
@@ -197,6 +207,11 @@ class FlightController extends GetxController {
       const AircraftTypeSelector(),
       isScrollControlled: true,
     );
+  }void openAirlinesSelector() {
+    Get.bottomSheet(
+      const AirlineSelector(),
+      isScrollControlled: true,
+    );
   }
 
   /// Fetch aircraft types. When [append] is true, append results to existing list.
@@ -227,7 +242,53 @@ class FlightController extends GetxController {
       isLoadingMoreAircraftTypes.value = false;
     }
   }
+  Future<void> fetchAirlines({
+    String search = '',
+    int limit = 10,
+    int page = 1,
+    bool append = false,
+  }) async {
+    try {
+      if (append) {
+        isLoadingMoreAirlines.value = true;
+      } else {
+        isLoadingAirlines.value = true;
+      }
 
+      final resp = await FlightApiService.fetchAirlines(
+        search: search,
+        limit: limit,
+        page: page,
+      );
+
+      final list = resp.airlines;
+
+      if (append) {
+        airlines.addAll(list);
+      } else {
+        airlines.assignAll(list);
+      }
+
+      airlinesPage.value =
+          resp.pagination?.currentPage ?? page;
+
+      airlinesHasNext.value =
+          resp.pagination?.hasNextPage ?? false;
+    } catch (e) {
+      final message = e is ApiException
+          ? e.message
+          : 'Failed to load airlines';
+
+      Get.snackbar(
+        'Error',
+        message,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } finally {
+      isLoadingAirlines.value = false;
+      isLoadingMoreAirlines.value = false;
+    }
+  }
   Future<void> _fetchFlightDetails(int flightId) async {
     try {
       isLoading.value = true;
