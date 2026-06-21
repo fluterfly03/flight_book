@@ -3,7 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../../routes/app_pages.dart';
 import '../../controllers/flight_controller.dart';
-import '../widgets/flight_card.dart';
+import '../widgets/flight_details_card.dart';
+
 
 
 class FlightListingScreen extends GetView<FlightController> {
@@ -130,7 +131,7 @@ class FlightListingScreen extends GetView<FlightController> {
                 itemBuilder: (context, index) {
                   final flight = flights[index];
 
-                  return FlightCard(
+                  return FlightListingCard(
                     flight: flight,
                   );
                 },

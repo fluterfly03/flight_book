@@ -4,10 +4,10 @@ import 'package:get/get.dart';
 import '../../../../routes/app_pages.dart';
 import '../screens/flight_listing_screen.dart';
 
-class FlightCard extends StatelessWidget {
+class FlightListingCard extends StatelessWidget {
   final Flight flight;
 
-  const FlightCard({
+  const FlightListingCard({
     super.key,
     required this.flight,
   });
