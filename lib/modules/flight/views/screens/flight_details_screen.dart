@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import '../../controllers/flight_controller.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/flight_ticket_card.dart';
+import '../widgets/flight_ticket_s_card.dart';
+import '../widgets/info_widget.dart';
 
 class FlightDetailsScreen extends GetView<FlightController> {
   const FlightDetailsScreen({super.key});
@@ -41,7 +43,76 @@ class FlightDetailsScreen extends GetView<FlightController> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      const FlightInfoCard(),
+                      FlightTicket(
+                        height:200.h,
+                        width: 350.w,
+                        cutPosition:120.h ,
+                        bottomWidget: Row(
+                        mainAxisAlignment:
+                        MainAxisAlignment
+                            .spaceBetween,
+                        children: const [
+                          Info(
+                            title:
+                            'TERMINAL',
+                            value: '2A',
+                          ),
+                          Info(
+                            title: 'GATE',
+                            value: '19',
+                          ),
+                          Info(
+                            title: 'Class',
+                            value:
+                            'Economy',
+                          ),
+                        ],
+                      ),
+                        headerWidget: Row(
+                          children: [
+                            Container(
+                              width: 45.h,
+                              height: 45.h,
+                              decoration:
+                              const BoxDecoration(
+                                color: Color(0xffEAF8EE),
+                                shape: BoxShape.circle,
+                              ),
+                              alignment:
+                              Alignment.center,
+                              child:  Text(
+                                'Citilink',
+                                style: TextStyle(
+                                  color:
+                                  Colors.green,
+                                  fontSize: 9.sp,
+                                  fontWeight:
+                                  FontWeight
+                                      .w700,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 14),
+                             Expanded(
+                              child: Text(
+                                'Citilink Airline',
+                                style: TextStyle(
+                                  fontSize:18.sp,
+                                  fontWeight:
+                                  FontWeight
+                                      .w600,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              'ID3242113',
+                              style: TextStyle(
+                                color:
+                                Colors.grey[500],
+                              ),
+                            )
+                          ],
+                        ),),
 
                       const SizedBox(height: 20),
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'info_widget.dart';
+
 class FlightInfoCard extends StatelessWidget {
   const FlightInfoCard({super.key});
 
@@ -142,16 +144,16 @@ class FlightInfoCard extends StatelessWidget {
                 MainAxisAlignment
                     .spaceBetween,
                 children: const [
-                  _Info(
+                  Info(
                     title:
                     'TERMINAL',
                     value: '2A',
                   ),
-                  _Info(
+                  Info(
                     title: 'GATE',
                     value: '19',
                   ),
-                  _Info(
+                  Info(
                     title: 'Class',
                     value:
                     'Economy',
@@ -229,40 +231,6 @@ class FlightInfoCard extends StatelessWidget {
           '($city)',
           style: const TextStyle(
             color: Colors.black45,
-          ),
-        )
-      ],
-    );
-  }
-}
-class _Info extends StatelessWidget {
-  final String title;
-  final String value;
-
-  const _Info({
-    required this.title,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            color:
-            Colors.grey.shade500,
-            fontSize: 12,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight:
-            FontWeight.w700,
           ),
         )
       ],

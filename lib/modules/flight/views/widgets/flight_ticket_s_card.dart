@@ -4,16 +4,23 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'date_widget.dart';
 import 'half_dotted_circle painter.dart';
+import 'info_widget.dart';
 
 class FlightTicket extends StatelessWidget {
-  const FlightTicket({super.key});
+  final Widget bottomWidget;
+  final Widget headerWidget;
+  final double cutPosition;
+  final double height;
+  final double width;
+  const FlightTicket({super.key,required this.bottomWidget,required this.headerWidget, required this.cutPosition,required this.height, required this.width});
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         Container(
-          width: 300.w,
+          width: width,
+          height: height,
           padding: EdgeInsets.all(10.w),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -29,15 +36,8 @@ class FlightTicket extends StatelessWidget {
           ),
           child: Column(
             children: [
-              Text(
-                'Citilink',
-                style: TextStyle(
-                  color: Colors.green,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20.sp,
-                ),
-              ),
-              SizedBox(height: 10.h),
+              headerWidget,
+              SizedBox(height:12.h),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -98,7 +98,7 @@ class FlightTicket extends StatelessWidget {
 
                 ],
               ),
-              SizedBox(height: 13.h),
+              SizedBox(height: 15.h),
               /// DOTTED LINE
               LayoutBuilder(
                 builder: (_, constraints) {
@@ -123,20 +123,14 @@ class FlightTicket extends StatelessWidget {
                   );
                 },
               ),
-              SizedBox(height: 13.h),
-              Row(
-                children: const [
-                  DateWidget(),
-                  Spacer(),
-                  DateWidget(),
-                ],
-              )
+              SizedBox(height: 15.h),
+              bottomWidget
             ],
           ),
         ),
         Positioned(
           left: -14.w,
-          top: 95.h,
+          top: cutPosition,
           child: CircleAvatar(
             radius: 14.r,
             backgroundColor: const Color(0xffF5F5F7),
@@ -144,7 +138,7 @@ class FlightTicket extends StatelessWidget {
         ),
         Positioned(
           right: -14.w,
-          top: 95.h,
+          top: cutPosition,
           child: CircleAvatar(
             radius: 14.r,
             backgroundColor: const Color(0xffF5F5F7),

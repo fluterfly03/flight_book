@@ -8,6 +8,7 @@ import '../widgets/bottom_nav_bar.dart';
 import '../widgets/date_widget.dart';
 import '../widgets/flight_ticket_s_card.dart';
 import '../widgets/half_dotted_circle painter.dart';
+import '../widgets/info_widget.dart';
 import '../widgets/search_flight_card.dart';
 
 
@@ -136,7 +137,32 @@ class PlanTripScreen extends GetView<FlightController> {
                     separatorBuilder: (_, __) =>
                     SizedBox(width: 18.w),
                     itemBuilder: (_, __) {
-                      return const FlightTicket();
+                      return  FlightTicket(
+                        height: 180.h,
+                        width: 300.w,
+                        cutPosition:100.h ,
+                        headerWidget: Text(
+                        'Citilink',
+                        style: TextStyle(
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20.sp,
+                        ),
+                      ),bottomWidget: Row(
+                        children: const [
+                          Info(
+                            title:
+                            'DATE',
+                            value: 'Jan 20, 2025',
+                          ),
+                          Spacer(),
+                          Info(
+                            title:
+                            'DATE',
+                            value: 'Jan 20, 2025',
+                          ),
+                        ],
+                      ),);
                     },
                   ),
                 ),
