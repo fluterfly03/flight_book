@@ -76,7 +76,7 @@ class FlightApiService {
     final client = ApiClient.instance;
     try {
       final response = await client.post(_flightPath, data: body);
-
+      ApiClient.instance.debugLog('fetchAirportsFrom response: ${response.data}');
       if (response.statusCode == 200 || response.statusCode == 202) {
         final Map<String, dynamic> data = response.data is String
             ? jsonDecode(response.data)

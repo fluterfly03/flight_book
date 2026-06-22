@@ -51,7 +51,7 @@ class FlightTicketCard extends StatelessWidget {
                   children: [
                     Expanded(
                         child: _airportInfo(
-                          time: flight.departureTime,
+                          time: flight.departureTime.split(':').take(2).join(':'),
                           code: flight.departureAirport,
                           city:flight.departureCity,
                           isRight: false,
@@ -96,7 +96,7 @@ class FlightTicketCard extends StatelessWidget {
                       child: Align(
                          alignment: Alignment.centerRight,
                          child: _airportInfo(
-                           time: flight.arrivalTime,
+                           time: flight.departureTime.split(':').take(2).join(':'),
                            code: flight.arrivalAirport,
                            city:flight.arrivalCity,
                            isRight: true,

@@ -203,8 +203,9 @@ class FlightListingScreen extends GetView<FlightController> {
                               )
                             else
                               Container(
-                                width: 46.h,
-                                height: 46.h,
+                                width: 48.h,
+                                height: 48.h,
+                                padding: EdgeInsets.all(2.h),
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: const Color(0xffEAF8EE),

@@ -2,6 +2,7 @@ import 'package:flight_book/modules/flight/models/flight_model.dart';
 import 'package:flight_book/modules/flight/models/flight_details_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/flight_controller.dart';
@@ -74,15 +75,17 @@ class FlightDetailsScreen extends GetView<FlightController> {
                               children: [
                                 if (flight.airlineLogo.isNotEmpty)
                                   Container(
-                                    width: 45.h,
-                                    height: 45.h,
+                                    width: 46.h,
+                                    height: 46.h,
+                                    padding: EdgeInsets.all(2.h),
                                     decoration: const BoxDecoration(
                                       shape: BoxShape.circle,
+                                      color: const Color(0xffEAF8EE),
                                     ),
                                     child: ClipOval(
                                       child: Image.network(
                                         flight.airlineLogo,
-                                        fit: BoxFit.cover,
+                                        fit: BoxFit.contain,
                                         errorBuilder: (_, __, ___) =>
                                             Container(
                                           color: const Color(0xffEAF8EE),
@@ -102,8 +105,9 @@ class FlightDetailsScreen extends GetView<FlightController> {
                                   )
                                 else
                                   Container(
-                                    width: 45.h,
-                                    height: 45.h,
+                                    width: 46.h,
+                                    height: 46.h,
+                                    padding: EdgeInsets.all(2.h),
                                     decoration: const BoxDecoration(
                                       color: Color(0xffEAF8EE),
                                       shape: BoxShape.circle,
@@ -141,7 +145,7 @@ class FlightDetailsScreen extends GetView<FlightController> {
                         const SizedBox(height: 20),
 
                         if (passengers.isNotEmpty)
-                          PassengerCard(passengers: passengers)
+                          PassengerCard(passengers: passengers, barcode: booking?.barcode ?? '')
                         else
                           const SizedBox.shrink(),
 
@@ -182,8 +186,9 @@ class FlightDetailsScreen extends GetView<FlightController> {
 
 class PassengerCard extends StatelessWidget {
   final List<Passenger> passengers;
+  final String barcode;
 
-  const PassengerCard({super.key, required this.passengers});
+  const PassengerCard({super.key, required this.passengers,required this.barcode,});
 
   @override
   Widget build(BuildContext context) {
@@ -199,11 +204,11 @@ class PassengerCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+               Text(
                 'Passengers Info',
-                style: TextStyle(fontSize: 26, fontWeight: FontWeight.w600),
+                style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600),
               ),
-              const SizedBox(height: 20),
+               SizedBox(height: 10.h),
               ...passengers.asMap().entries.map((entry) {
                 final index = entry.key;
                 final passenger = entry.value;
@@ -218,16 +223,17 @@ class PassengerCard extends StatelessWidget {
                   ],
                 );
               }).toList(),
-              const SizedBox(height: 30),
-
+               SizedBox(height: 20.h),
               /// BARCODE
-              SizedBox(
-                height: 70,
-                child: CustomPaint(
-                  painter: BarcodePainter(),
-                  size: const Size(double.infinity, 70),
+              Center(
+                child: SvgPicture.string(
+                  barcode,
+                  // width: 600.w,
+                  height: 100.h,
+                  fit: BoxFit.contain,
                 ),
               ),
+              /// BARCODE
             ],
           ),
         ),
