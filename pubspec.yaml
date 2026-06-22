@@ -22,9 +22,9 @@ dependencies:
   google_fonts: ^6.2.1
   intl: ^0.20.2
   flutter_svg: ^2.2.0
-  pdf: ^3.11.3
   path_provider: ^2.1.5
-  share_plus: ^11.0.0
+  pdf: ^3.11.3
+  open_filex: ^4.7.0
 
 dev_dependencies:
   flutter_test:

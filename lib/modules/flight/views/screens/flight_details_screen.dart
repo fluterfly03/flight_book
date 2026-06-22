@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/flight_controller.dart';
+import '../widgets/boarding_pass_pdf.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/flight_ticket_card.dart';
 import '../widgets/info_widget.dart';
@@ -161,7 +162,13 @@ class FlightDetailsScreen extends GetView<FlightController> {
                                 borderRadius: BorderRadius.circular(35),
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: () async {
+                              final details = controller.selectedFlightDetails.value;
+
+                              if (details != null) {
+                                await saveBoardingPassPdf(details);
+                              }
+                            },
                             child: const Text(
                               'Download & Save pass',
                               style: TextStyle(
