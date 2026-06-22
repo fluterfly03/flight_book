@@ -20,22 +20,24 @@ class PlanTripScreen extends GetView<FlightController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xff4F87FF),
-      bottomNavigationBar: Stack(
-        children: [
-          const BottomBar(),
-          Positioned(
-            top: 0,
-            left: 24.w,
-            child: Container(
-              width: 90.w,
-              height: 1.h,
-              decoration: BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.circular(10),
+      bottomNavigationBar: SafeArea(
+        child: Stack(
+          children: [
+            const BottomBar(),
+            Positioned(
+              top: 0,
+              left: 24.w,
+              child: Container(
+                width: 90.w,
+                height: 1.h,
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       body: SafeArea(
         child: Container(
@@ -114,7 +116,7 @@ class PlanTripScreen extends GetView<FlightController> {
                           Text(
                             'See more',
                             style: TextStyle(
-                              color: Colors.black54,
+                              color: Colors.black,
                               fontSize: 10.sp,
                             ),
                           )

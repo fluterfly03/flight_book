@@ -61,7 +61,6 @@ class _SearchFlightCardState extends State<SearchFlightCard> {
             ),
           ),
 
-          SizedBox(height: 10.h),
 
           /// DIVIDER + SWAP BUTTON
           Stack(
@@ -116,11 +115,11 @@ class _SearchFlightCardState extends State<SearchFlightCard> {
           ),
 
           Divider(
-            height: 20.h,
+            height: 5.h,
             thickness: 1,
             color: Colors.grey.shade300,
           ),
-
+          SizedBox(height: 15.h),
           /// DEPARTURE + AMOUNT
           Row(
             children: [
@@ -159,7 +158,7 @@ class _SearchFlightCardState extends State<SearchFlightCard> {
           /// BUTTON
           SizedBox(
             width: double.infinity,
-            height: 45.h,
+            height: 42.h,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
@@ -199,7 +198,7 @@ class _SearchFlightCardState extends State<SearchFlightCard> {
           label,
           style: TextStyle(
             color: Colors.grey,
-            fontSize: 11.sp,
+            fontSize: 10.sp,
           ),
         ),
         Autocomplete<Airport>(
@@ -238,12 +237,13 @@ class _SearchFlightCardState extends State<SearchFlightCard> {
 
             return TextField(
               controller: textController,
+              style: TextStyle(color: Colors.black, fontSize: 14.sp,fontWeight: FontWeight.w500),
               focusNode: focusNode,
               decoration: InputDecoration(
                 hintText: 'Search airport',
                 border: InputBorder.none,
+                isDense: true,
                 contentPadding: EdgeInsets.symmetric(
-                  horizontal: 1.w,
                   vertical: 1.h,
                 ),
               ),
@@ -289,28 +289,6 @@ class _SearchFlightCardState extends State<SearchFlightCard> {
       ],
     );
   }
-  Widget _locationTile({
-    required String label,
-    required String value,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style:
-          TextStyle(color: Colors.grey, fontSize: 12.sp),
-        ),
-        SizedBox(height: 2.h),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
-    );
-  }
+
 
 }

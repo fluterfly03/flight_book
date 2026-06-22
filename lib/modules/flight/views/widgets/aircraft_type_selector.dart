@@ -65,14 +65,37 @@ class _AircraftTypeSelectorState extends State<AircraftTypeSelector> {
 		  ),
 		  child: Column(
 			children: [
-			  Container(
-				width: 40,
-				height: 4,
-				margin: const EdgeInsets.only(bottom: 8),
-				decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(4)),
-			  ),
+				Container(
+					width: 45,
+					height: 5,
+					margin:
+					const EdgeInsets.only(bottom: 16),
+					decoration: BoxDecoration(
+						color: Colors.grey.shade300,
+						borderRadius:
+						BorderRadius.circular(10),
+					),
+				),
+
+				const Text(
+					'Select Aircraft Type',
+					style: TextStyle(
+						fontSize: 18,
+						fontWeight: FontWeight.w600,
+					),
+				),
+
+				const SizedBox(height: 16),
 			  TextField(
-				decoration: const InputDecoration(prefixIcon: Icon(Icons.search), hintText: 'Search aircraft type'),
+					decoration: InputDecoration(
+						hintText: 'Search aircraft type',
+						prefixIcon:
+						const Icon(Icons.search),
+						border: OutlineInputBorder(
+							borderRadius:
+							BorderRadius.circular(12),
+						),
+					),
 				onChanged: _onSearchChanged,
 			  ),
 			  const SizedBox(height: 8),
