@@ -5,15 +5,11 @@ import '../../controllers/flight_controller.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/flight_ticket_card.dart';
 
-
-
 class FlightListingScreen extends GetView<FlightController> {
   const FlightListingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // controller is available via GetView
-final isPriceLowToHigh = true.obs; // This should come from your controller's state
     return Scaffold(
       backgroundColor: Color(0xffcddcf9),
       floatingActionButton: Container(
@@ -27,7 +23,7 @@ final isPriceLowToHigh = true.obs; // This should come from your controller's st
               color: const Color.fromRGBO(0, 0, 0, 0.08),
               blurRadius: 20,
               offset: const Offset(0, 8),
-            )
+            ),
           ],
         ),
         child: const Icon(
@@ -42,32 +38,41 @@ final isPriceLowToHigh = true.obs; // This should come from your controller's st
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [Color(0xffcddcf9),Color(0xffF2F3F7),Color(0xffF2F3F7),Color(0xffF2F3F7)],
+              colors: [
+                Color(0xffcddcf9),
+                Color(0xffF2F3F7),
+                Color(0xffF2F3F7),
+                Color(0xffF2F3F7),
+              ],
             ),
           ),
-          padding:     EdgeInsets.symmetric(horizontal: 15.w, vertical: 12.h),
+          padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 12.h),
 
           child: Column(
             children: [
               SizedBox(height: 10.h),
 
               /// TOP BAR
-
-              CustomAppBar(title: "Flight result",trailingWidget: _circleButton(Icons.more_vert),),
-               SizedBox(height: 20.h),
+              CustomAppBar(
+                title: "Flight result",
+                trailingWidget: _circleButton(Icons.more_vert),
+              ),
+              SizedBox(height: 20.h),
 
               /// FILTER CHIPS
               SizedBox(
-                height: 46,
+                height: 35.h,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [
                     GestureDetector(
-                      onTap: () => isPriceLowToHigh.value = !isPriceLowToHigh.value,
+                      onTap: () {
+                      controller.isPriceLowToHigh.value = !controller.isPriceLowToHigh.value;
+                      controller.searchFlights();},
                       child: Obx(() {
                         return _chip(
                           "Lowest to Highest",
-                          selected: isPriceLowToHigh.value,
+                          selected: controller.isPriceLowToHigh.value,
                         );
                       }),
                     ),
@@ -76,7 +81,16 @@ final isPriceLowToHigh = true.obs; // This should come from your controller's st
                       onTap: () => controller.openAirlinesSelector(),
                       child: Obx(() {
                         final selected = controller.selectedAirlines.value;
-                        return _chip(selected.isNotEmpty ? selected : "Preferred airlines",selected: selected.isNotEmpty);
+                        return _chip(
+                          selected.isNotEmpty ? selected : "Preferred airlines",
+                          selected: selected.isNotEmpty,
+                          onClear: selected.isNotEmpty
+                              ? () {
+                                  controller.selectedAirlines.value = '';
+                                  controller.searchFlights();
+                                }
+                              : null,
+                        );
                       }),
                     ),
                     const SizedBox(width: 12),
@@ -84,7 +98,16 @@ final isPriceLowToHigh = true.obs; // This should come from your controller's st
                       onTap: () => controller.openAircraftTypeSelector(),
                       child: Obx(() {
                         final selected = controller.selectedAircraftType.value;
-                        return _chip(selected.isNotEmpty ? selected : "Flight type",selected: selected.isNotEmpty);
+                        return _chip(
+                          selected.isNotEmpty ? selected : "Flight type",
+                          selected: selected.isNotEmpty,
+                          onClear: selected.isNotEmpty
+                              ? () {
+                                  controller.selectedAircraftType.value = '';
+                                  controller.searchFlights();
+                                }
+                              : null,
+                        );
                       }),
                     ),
                   ],
@@ -126,7 +149,7 @@ final isPriceLowToHigh = true.obs; // This should come from your controller's st
                                     fontSize: 12.h,
                                     color: Colors.black54,
                                   ),
-                                )
+                                ),
                               ],
                             ),
                             const Spacer(),
@@ -141,25 +164,26 @@ final isPriceLowToHigh = true.obs; // This should come from your controller's st
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30),
                                   ),
-                                  padding: const EdgeInsets.symmetric(horizontal: 28),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 28,
+                                  ),
                                 ),
                                 child: Text(
                                   "Select flight",
                                   style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 14.h,
+                                    fontSize: 12.h,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ),
-                            )
+                            ),
                           ],
                         ),
                         headerWidget: Row(
                           children: [
                             if (flight.airlineLogo.isNotEmpty)
                               Container(
-
                                 width: 48.h,
                                 height: 48.h,
                                 padding: EdgeInsets.all(2.h),
@@ -171,7 +195,9 @@ final isPriceLowToHigh = true.obs; // This should come from your controller's st
                                   child: Image.network(
                                     flight.airlineLogo,
                                     fit: BoxFit.contain,
-                                    errorBuilder: (_, __, ___) => Container(color: const Color(0xffEAF8EE)),
+                                    errorBuilder: (_, __, ___) => Container(
+                                      color: const Color(0xffEAF8EE),
+                                    ),
                                   ),
                                 ),
                               )
@@ -185,7 +211,9 @@ final isPriceLowToHigh = true.obs; // This should come from your controller's st
                                 ),
                                 alignment: Alignment.center,
                                 child: Text(
-                                  flight.airlineName.isNotEmpty ? flight.airlineName[0] : '?',
+                                  flight.airlineName.isNotEmpty
+                                      ? flight.airlineName[0]
+                                      : '?',
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w700,
@@ -201,7 +229,7 @@ final isPriceLowToHigh = true.obs; // This should come from your controller's st
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
-                            )
+                            ),
                           ],
                         ),
                       );
@@ -224,70 +252,41 @@ final isPriceLowToHigh = true.obs; // This should come from your controller's st
         color: Colors.white,
         shape: BoxShape.circle,
       ),
-      child: Icon(
-        icon,
-        size: 18.h,
-        color: Colors.grey,
-      ),
+      child: Icon(icon, size: 18.h, color: Colors.grey),
     );
   }
 
   static Widget _chip(
-      String title, {
-        bool selected = false,
-      }) {
+    String title, {
+    bool selected = false,
+    VoidCallback? onClear,
+  }) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 22,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 22),
       decoration: BoxDecoration(
-        color: selected
-            ? const Color(0xff2F6BFF)
-            : Colors.white,
+        color: selected ? const Color(0xff2F6BFF) : Colors.white,
         borderRadius: BorderRadius.circular(30),
       ),
       alignment: Alignment.center,
-      child: Text(
-        title,
-        style: TextStyle(
-          fontWeight: FontWeight.w500,
-          color:
-          selected ? Colors.white : Colors.black,
-        ),
+      child: Row(
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: selected ? Colors.white : Colors.black,
+            ),
+          ),
+          if (selected) ...[
+            const SizedBox(width: 8),
+            GestureDetector(
+              onTap: onClear,
+
+              child: const Icon(Icons.close, color: Colors.white, size: 18),
+            ),
+          ],
+        ],
       ),
     );
   }
-}
-
-
-
-class Flight {
-  final String airlineName;
-  final Color logoColor;
-  final String logoText;
-
-  final String departureTime;
-  final String departureCode;
-  final String departureCity;
-
-  final String arrivalTime;
-  final String arrivalCode;
-  final String arrivalCity;
-
-  final String duration;
-  final int price;
-
-  Flight({
-    required this.airlineName,
-    required this.logoColor,
-    required this.logoText,
-    required this.departureTime,
-    required this.departureCode,
-    required this.departureCity,
-    required this.arrivalTime,
-    required this.arrivalCode,
-    required this.arrivalCity,
-    required this.duration,
-    required this.price,
-  });
 }

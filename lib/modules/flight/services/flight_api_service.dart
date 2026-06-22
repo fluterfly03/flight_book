@@ -20,14 +20,14 @@ class FlightApiService {
     required String from,
     required String to,
     required int passengers,
-    String sortBy = 'price_asc',
+    String? sortBy = 'price_asc',
     Map<String, dynamic>? filters,
   }) async {
     final body = {
       'from': from,
       'to': to,
       'passengers': passengers,
-      'sort_by': sortBy,
+      'sort_by': ?sortBy,
       'filters': filters ?? {
         'airline': '',
         'price_min': 0,

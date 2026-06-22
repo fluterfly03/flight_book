@@ -25,7 +25,7 @@ class FlightTicketCard extends StatelessWidget {
           child: Container(
             width: width,
             height: height,
-            padding: EdgeInsets.all(10.w),
+            padding: EdgeInsets.all(15.w),
             decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: [
@@ -64,7 +64,7 @@ class FlightTicketCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
-                          width: 40.w,
+                          width: 35.w,
                           height: 35.w,
                           child: Stack(
                             alignment: Alignment.center,
@@ -131,7 +131,7 @@ class FlightTicketCard extends StatelessWidget {
                     );
                   },
                 ),
-                SizedBox(height: 15.h),
+                SizedBox(height: 10.h),
                 bottomWidget
               ],
             ),
@@ -188,7 +188,7 @@ class FlightTicketCard extends StatelessWidget {
               ),
             ),
 
-            SizedBox(width: 4.w),
+            SizedBox(width: 1.w),
 
             Text(
               '($city)',

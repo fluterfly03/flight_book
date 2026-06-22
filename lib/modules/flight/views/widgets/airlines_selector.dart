@@ -198,6 +198,7 @@ class _AirlineSelectorState
                                 .selectedAirlines
                                 .value = value!;
                             Get.back();
+                            controller.searchFlights();
                           },
                         ),
                       );

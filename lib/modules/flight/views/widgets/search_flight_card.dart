@@ -169,6 +169,8 @@ class _SearchFlightCardState extends State<SearchFlightCard> {
                 ),
               ),
               onPressed: () {
+                controller.selectedAircraftType.value='';
+                controller.selectedAirlines.value='';
                 controller.searchFlights();
               },
               child: Text(

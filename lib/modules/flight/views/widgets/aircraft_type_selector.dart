@@ -122,6 +122,7 @@ class _AircraftTypeSelectorState extends State<AircraftTypeSelector> {
 						onTap: () {
 						  controller.selectedAircraftType.value = item.aircraft;
 						  Get.back();
+							controller.searchFlights();
 						},
 					  );
 					},

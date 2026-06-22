@@ -20,6 +20,7 @@ class FlightController extends GetxController {
   final from1 = Rxn<Airport>();
   final to1 = Rxn<Airport>();
   final passengerCount = 1.obs;
+  final isPriceLowToHigh = true.obs;
 
   void incrementPassenger() {
     passengerCount.value++;
@@ -126,6 +127,7 @@ class FlightController extends GetxController {
   final isLoadingMoreAircraftTypes = false.obs;
   final selectedAircraftType = ''.obs;
 
+
   // Airlines state for selector
   final airlines = <Airline>[].obs;
   final airlinesPage = 1.obs;
@@ -136,6 +138,7 @@ class FlightController extends GetxController {
 
 
   void searchFlights() {
+
     // perform API search then navigate to results
     _searchAndNavigate();
   }
@@ -188,9 +191,14 @@ class FlightController extends GetxController {
         from: fromCode,
         to: toCode,
         passengers: passengerCount.value,
-        sortBy: 'price_asc',
+        sortBy: isPriceLowToHigh.value
+            ? 'price_asc'
+            : null,
         filters: {
+          if(selectedAircraftType.value.isNotEmpty)
           'aircraft_type': selectedAircraftType.value,
+          if(selectedAirlines.value.isNotEmpty)
+          'airline': selectedAirlines.value,
         },
       );
       flights.value = results;
