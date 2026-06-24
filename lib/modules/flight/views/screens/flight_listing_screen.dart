@@ -14,6 +14,9 @@ class FlightListingScreen extends GetView<FlightController> {
     return Scaffold(
       appBar:  AppBar(
         elevation: 0,
+        scrolledUnderElevation: 0,
+        surfaceTintColor: Colors.transparent,
+
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0xffcddcf9),
       ),

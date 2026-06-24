@@ -20,6 +20,8 @@ class PlanTripScreen extends GetView<FlightController> {
     return Scaffold(
       appBar: AppBar(
           elevation: 0,
+          scrolledUnderElevation: 0,
+          surfaceTintColor: Colors.transparent,
           backgroundColor: const Color(0xff4F87FF)),
       backgroundColor: Colors.white,
       bottomNavigationBar: SafeArea(
