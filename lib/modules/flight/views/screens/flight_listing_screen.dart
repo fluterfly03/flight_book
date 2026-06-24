@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../controllers/flight_controller.dart';
+import '../../resources/asset_constants.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/flight_ticket_card.dart';
 
@@ -11,10 +12,15 @@ class FlightListingScreen extends GetView<FlightController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffcddcf9),
+      appBar:  AppBar(
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        backgroundColor: const Color(0xffcddcf9),
+      ),
+      // backgroundColor: Colors.transparent,
       floatingActionButton: Container(
-        width: 70,
-        height: 70,
+        width: 60.h,
+        height: 60.h,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: const Color(0xffDCE8FF),
@@ -26,10 +32,9 @@ class FlightListingScreen extends GetView<FlightController> {
             ),
           ],
         ),
-        child: const Icon(
-          Icons.filter_alt_outlined,
-          color: Color(0xff2F6BFF),
-          size: 32,
+        child: Padding(
+          padding: EdgeInsets.all(20.h),
+          child: Image.asset(AssetConstants.filter,color:Color(0xff2A6DED) ,width: 0.1.w, height: 0.1.w,fit:  BoxFit.contain,),
         ),
       ),
       body: SafeArea(
@@ -46,22 +51,22 @@ class FlightListingScreen extends GetView<FlightController> {
               ],
             ),
           ),
-          padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 12.h),
+          padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 1.h),
 
           child: Column(
             children: [
-              SizedBox(height: 10.h),
+
 
               /// TOP BAR
               CustomAppBar(
                 title: "Flight result",
                 trailingWidget: _circleButton(Icons.more_vert),
               ),
-              SizedBox(height: 20.h),
+              SizedBox(height: 25.h),
 
               /// FILTER CHIPS
               SizedBox(
-                height: 35.h,
+                height: 40.h,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [

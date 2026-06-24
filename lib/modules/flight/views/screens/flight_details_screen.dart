@@ -33,7 +33,12 @@ class FlightDetailsScreen extends GetView<FlightController> {
       final booking = flightDetails.data?.bookingInfo;
 
       return Scaffold(
-        backgroundColor: const Color(0xffcddcf9),
+        appBar:  AppBar(
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          backgroundColor: const Color(0xffcddcf9),
+        ),
+        // backgroundColor: const Color(0xffcddcf9),
         body: SafeArea(
           child: Container(
             decoration: BoxDecoration(
@@ -43,7 +48,7 @@ class FlightDetailsScreen extends GetView<FlightController> {
                 colors: [Color(0xffcddcf9),Color(0xffF2F3F7),Color(0xffF2F3F7),Color(0xffF2F3F7)],
               ),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 20,),
             child: Column(
               children: [
                 /// APP BAR
@@ -213,7 +218,7 @@ class PassengerCard extends StatelessWidget {
             children: [
                Text(
                 'Passengers Info',
-                style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600),
+                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600),
               ),
                SizedBox(height: 10.h),
               ...passengers.asMap().entries.map((entry) {
@@ -233,11 +238,15 @@ class PassengerCard extends StatelessWidget {
                SizedBox(height: 20.h),
               /// BARCODE
               Center(
-                child: SvgPicture.string(
-                  barcode,
-                  // width: 600.w,
-                  height: 100.h,
-                  fit: BoxFit.contain,
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 120.h,
+                  child: SvgPicture.string(
+                    barcode,
+                    width: double.infinity,
+                    height: 120.h,
+                      fit: BoxFit.fill
+                  ),
                 ),
               ),
               /// BARCODE
@@ -303,22 +312,3 @@ class PassengerCard extends StatelessWidget {
   }
 }
 
-class BarcodePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = Colors.black;
-
-    double x = 0;
-
-    while (x < size.width) {
-      final width = (x % 3 == 0) ? 4.0 : 2.0;
-
-      canvas.drawRect(Rect.fromLTWH(x, 0, width, size.height), paint);
-
-      x += width + 3;
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}

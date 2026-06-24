@@ -18,7 +18,9 @@ class PlanTripScreen extends GetView<FlightController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: const Color(0xff4F87FF)),
+      appBar: AppBar(
+          elevation: 0,
+          backgroundColor: const Color(0xff4F87FF)),
       backgroundColor: Colors.white,
       bottomNavigationBar: SafeArea(
         child: Stack(
