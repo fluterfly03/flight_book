@@ -87,9 +87,6 @@ class FlightController extends GetxController {
       // Fetch airports for both from and to
       final fromAirports = await FlightApiService.fetchAirportsFrom(limit: 20);
       final toAirports = await FlightApiService.fetchAllAirportsTo();
-      print(".......1............");
-      print(toAirports.length);
-      print(".......1............");
 
       // Use 'from' airports as the main list (you can adjust this logic as needed)
       this.fromAirports.assignAll(fromAirports);
