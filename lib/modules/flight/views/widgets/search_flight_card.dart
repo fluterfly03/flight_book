@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import '../../../../routes/app_pages.dart';
 import '../../controllers/flight_controller.dart';
 import '../../models/airport_model.dart';
+import '../../resources/asset_constants.dart';
 import 'custom_tile.dart';
 
 class SearchFlightCard extends StatefulWidget {
@@ -76,8 +77,8 @@ class _SearchFlightCardState extends State<SearchFlightCard> {
               Positioned(
                 right: 20.w,
                 child: Container(
-                  height: 45.w,
-                  width: 45.w,
+                  height: 40.w,
+                  width: 40.w,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.circle,
@@ -91,9 +92,11 @@ class _SearchFlightCardState extends State<SearchFlightCard> {
                     ],
                   ),
                   child: IconButton(
-                    icon: const Icon(
-                      Icons.swap_vert,
+                    icon:  Image.asset(
+                      AssetConstants.swap,
                       color: Color(0xff6B7280),
+                      height: 15.h,
+                      width: 15.h,
                     ),
                     onPressed:controller.swapLocations,
                   ),
@@ -130,7 +133,12 @@ class _SearchFlightCardState extends State<SearchFlightCard> {
                     value: DateFormat(
                       'EEE, d MMM',
                     ).format(controller.departureDate.value),
-                    icon: Icons.calendar_today_outlined,
+                    icon: Image.asset(
+                      AssetConstants.calendar,
+                      color: Color(0xff6B7280),
+                      height: 15.h,
+                      width: 15.h,
+                    ),
                     onTap: () =>
                         controller.pickDepartureDate(context),
                   ),
@@ -143,7 +151,10 @@ class _SearchFlightCardState extends State<SearchFlightCard> {
                     title: 'Amount',
                     value:
                     '${controller.passengerCount.value} ${controller.passengerCount.value == 1 ? 'person' : 'people'}',
-                    icon: Icons.keyboard_arrow_down,
+                    icon: Icon(
+                        Icons.keyboard_arrow_down,color: Color(0xff6B7280),
+                      size: 20.h,
+                      ),
                     onTap: controller.openPassengerSelector,
 
 
@@ -153,12 +164,12 @@ class _SearchFlightCardState extends State<SearchFlightCard> {
             ],
           ),
 
-          SizedBox(height: 24.h),
+          SizedBox(height: 15.h),
 
           /// BUTTON
           SizedBox(
             width: double.infinity,
-            height: 42.h,
+            height: 45.h,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
@@ -239,7 +250,7 @@ class _SearchFlightCardState extends State<SearchFlightCard> {
 
             return TextField(
               controller: textController,
-              style: TextStyle(color: Colors.black, fontSize: 14.sp,fontWeight: FontWeight.w500),
+              style: TextStyle(color: Colors.black, fontSize: 16.sp,fontWeight: FontWeight.w500),
               focusNode: focusNode,
               decoration: InputDecoration(
                 hintText: 'Search airport',

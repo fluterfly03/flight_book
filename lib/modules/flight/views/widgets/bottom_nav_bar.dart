@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../resources/asset_constants.dart';
+
 class BottomBar extends StatelessWidget {
   const BottomBar({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 90.h,
+      height: 65.h,
       decoration: BoxDecoration(
         color: Colors.white,
 
@@ -24,17 +26,17 @@ class BottomBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _navItem(
-            icon: Icons.home,
+            icon: AssetConstants.home,
             selected: true,
           ),
           _navItem(
-            icon: Icons.flight_outlined,
+            icon: AssetConstants.flight,
           ),
           _navItem(
-            icon: Icons.map_outlined,
+            icon: AssetConstants.map,
           ),
           _navItem(
-            icon: Icons.person_outline,
+            icon:  AssetConstants.user,
           ),
         ],
       ),
@@ -42,21 +44,14 @@ class BottomBar extends StatelessWidget {
   }
 
   Widget _navItem({
-    required IconData icon,
+    required String icon,
     bool selected = false,
   }) {
-    return Container(
-      width: 28.w,
-      height: 28.h,
-      decoration: BoxDecoration(
-        color: selected ? Colors.blue : Colors.transparent,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Icon(
-        icon,
-        size: 18.sp,
-        color: selected ? Colors.white : Colors.grey,
-      ),
+    return Image.asset(
+     icon,
+      height: 20.h,
+      width: 20.h,
+      color: selected ? Color(0xff2A6DED) : Colors.grey,
     );
   }
 }

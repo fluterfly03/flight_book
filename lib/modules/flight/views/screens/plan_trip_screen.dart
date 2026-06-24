@@ -12,14 +12,14 @@ import '../widgets/info_widget.dart';
 import '../widgets/search_flight_card.dart';
 import 'flight_listing_screen.dart';
 
-
 class PlanTripScreen extends GetView<FlightController> {
   const PlanTripScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xff4F87FF),
+      appBar: AppBar(backgroundColor: const Color(0xff4F87FF)),
+      backgroundColor: Colors.white,
       bottomNavigationBar: SafeArea(
         child: Stack(
           children: [
@@ -42,7 +42,7 @@ class PlanTripScreen extends GetView<FlightController> {
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 18.w),
-          decoration:  BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
@@ -51,13 +51,11 @@ class PlanTripScreen extends GetView<FlightController> {
                 Color(0xffF2F3F7),
                 Color(0xffF2F3F7),
                 Color(0xffF2F3F7),
-
               ],
             ),
           ),
           child: Column(
             children: [
-              SizedBox(height: 28.h),
               Row(
                 children: [
                   Text(
@@ -70,14 +68,11 @@ class PlanTripScreen extends GetView<FlightController> {
                   ),
                   const Spacer(),
                   Container(
-                    height: 52.w,
-                    width: 52.w,
+                    height: 48.w,
+                    width: 48.w,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Colors.white,
-                        width: 2,
-                      ),
+                      border: Border.all(color: Colors.white, width: 1),
                       image: const DecorationImage(
                         image: NetworkImage(
                           'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
@@ -89,7 +84,6 @@ class PlanTripScreen extends GetView<FlightController> {
                 ],
               ),
 
-
               SizedBox(height: 5.h),
               // TOP SECTION
               Expanded(
@@ -97,14 +91,13 @@ class PlanTripScreen extends GetView<FlightController> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-
                       SizedBox(height: 20.h),
                       // SEARCH CARD
                       SearchFlightCard(),
-                      SizedBox(height: 25.h),
+                      SizedBox(height: 28.h),
                       // SAVED TRIPS
                       Row(
-                        children:  [
+                        children: [
                           Text(
                             'Saved trips',
                             style: TextStyle(
@@ -117,23 +110,23 @@ class PlanTripScreen extends GetView<FlightController> {
                             'See more',
                             style: TextStyle(
                               color: Colors.black,
+                              fontWeight: FontWeight.w500,
                               fontSize: 10.sp,
                             ),
-                          )
+                          ),
                         ],
                       ),
-                
-                      SizedBox(height: 10.h),
+
+                      SizedBox(height: 15.h),
                       SizedBox(
-                        height: 180.h,
+                        height: 190.h,
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
                           itemCount: 3,
-                          separatorBuilder: (_, __) =>
-                              SizedBox(width: 8.w),
+                          separatorBuilder: (_, __) => SizedBox(width: 8.w),
                           itemBuilder: (_, __) {
-                            return  FlightTicketCard(
-                              flight:FlightModel(
+                            return FlightTicketCard(
+                              flight: FlightModel(
                                 airlineName: "Citilink Airline",
                                 departureTime: "07:47",
                                 departureCity: "Jakarta",
@@ -142,59 +135,41 @@ class PlanTripScreen extends GetView<FlightController> {
                                 duration: "7h 15m",
                                 airlineLogo: '',
                                 flightNumber: '',
-                                departureAirport: '',
-                                arrivalAirport: '',
+                                departureAirport: 'CGK',
+                                arrivalAirport: 'NRT',
                                 priceAmount: 122.56,
                                 priceCurrency: '',
                                 aircraftType: '',
                                 stops: 1,
                               ),
-                              height: 180.h,
-                              width: 300.w,
-                              cutPosition:100.h ,
-                              headerWidget: Text(
-                                'Citilink',
-                                style: TextStyle(
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20.sp,
-                                ),
-                              ),bottomWidget: Row(
-                              children: const [
-                                Info(
-                                  title:
-                                  'DATE',
-                                  value: 'Jan 20, 2025',
-                                ),
-                                Spacer(),
-                                Info(
-                                  title:
-                                  'DATE',
-                                  value: 'Jan 20, 2025',
-                                ),
-                              ],
-                            ),);
+                              height: 190.h,
+                              width: 310.w,
+                              cutPosition: 110.h,
+                              headerWidget: Image.asset(
+                                'assets/images/img.png',
+                                height: 35.h,
+                                width: 80.w,
+                              ),
+                              bottomWidget: Row(
+                                children: const [
+                                  Info(title: 'DATE', value: 'Jan 20, 2025'),
+                                  Spacer(),
+                                  Info(title: 'DATE', value: 'Jan 20, 2025'),
+                                ],
+                              ),
+                            );
                           },
                         ),
                       ),
                       SizedBox(height: 30.h),
-                
                     ],
                   ),
                 ),
               ),
-
             ],
           ),
         ),
       ),
     );
   }
-
-
 }
-
-
-
-
-

@@ -106,7 +106,7 @@ class FlightTicketCard extends StatelessWidget {
 
                   ],
                 ),
-                SizedBox(height: 15.h),
+                SizedBox(height: 10.h),
                 /// DOTTED LINE
                 LayoutBuilder(
                   builder: (_, constraints) {

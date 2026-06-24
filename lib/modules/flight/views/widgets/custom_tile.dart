@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 Widget CustomTile({
   required String title,
   required String value,
-  required IconData icon,
+  required Widget icon,
   VoidCallback? onTap,
 }) {
   return InkWell(
@@ -27,17 +27,14 @@ Widget CustomTile({
               child: Text(
                 value,
                 style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w500,
+                    color: Colors.black, fontSize: 16.sp,fontWeight: FontWeight.w500
                 ),
               ),
             ),
-            Icon(
-              icon,
-              size: 18.sp,
-            ),
+            icon,
           ],
         ),
+        SizedBox(height: 2.h),
         Divider(
           height: 20.h,
           thickness: 1,
