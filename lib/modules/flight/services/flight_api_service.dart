@@ -240,49 +240,49 @@ class FlightApiService {
   }
 
   /// Fetch airports for arrival (to)
-  static Future<List<Airport>> fetchAirportsTo({
+  static Future<List<Airport>> fetchAllAirportsTo({
     String search = '',
-    int limit = 20,
-    int page = 1,
   }) async {
-    final body = {
-      'search': search,
-      'limit': limit,
-      'page': page,
-    };
+    final List<Airport> allAirports = [];
 
-    final client = ApiClient.instance;
-    try {
-      final response = await client.post(_airportsToPath, data: body);
-      // Print/debug the raw response for debugging
-      ApiClient.instance.debugLog('fetchAirportsTo response: ${response.data}');
+    int page = 1;
+    bool hasNextPage = true;
 
-      if (response.statusCode == 200 || response.statusCode == 202) {
-        final Map<String, dynamic> data = response.data is String
-            ? jsonDecode(response.data)
-            : response.data as Map<String, dynamic>;
-        if (data['status'] == 'success' && data['data'] != null) {
-          final airportsJson = data['data']['airports'] as List<dynamic>?;
-          if (airportsJson == null) return [];
-          return airportsJson
-              .map((e) => Airport.fromJson(e as Map<String, dynamic>))
-              .toList();
-        } else if (response.statusCode == 202) {
-          // queued
-          return [];
-        } else {
-          throw ApiException(data['message'] ?? 'Unknown API error',
-              statusCode: response.statusCode);
-        }
-      } else {
-        throw ApiException('Network error: ${response.statusCode}',
-            statusCode: response.statusCode);
+    while (hasNextPage) {
+      final body = {
+        'search': search,
+        'limit': 20,
+        'page': page,
+      };
+
+      final response =
+      await ApiClient.instance.post(_airportsToPath, data: body);
+
+      final Map<String, dynamic> data = response.data is String
+          ? jsonDecode(response.data)
+          : response.data as Map<String, dynamic>;
+
+      if (data['status'] != 'success' || data['data'] == null) {
+        break;
       }
-    } on ApiException {
-      rethrow;
-    } catch (e) {
-      throw ApiException(e.toString());
+
+      final airportsJson =
+          data['data']['airports'] as List<dynamic>? ?? [];
+
+      allAirports.addAll(
+        airportsJson
+            .map((e) => Airport.fromJson(e as Map<String, dynamic>))
+            .toList(),
+      );
+
+      final pagination =
+      data['data']['pagination'] as Map<String, dynamic>?;
+
+      hasNextPage = pagination?['hasNextPage'] ?? false;
+      page++;
     }
+
+    return allAirports;
   }
 }
 
